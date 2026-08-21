@@ -1,0 +1,75 @@
+import CImage from "@/components/custom/c-image";
+import { Button } from "@/components/ui/button";
+import { RTR } from "@/lib/constants";
+import { ArrowRight } from "lucide-react";
+import { Link } from "next-view-transitions";
+
+export default function CardActivity({
+  title,
+  description,
+  image,
+  createdAt,
+  id,
+}: {
+  title: string;
+  description?: string;
+  image: string;
+  createdAt: string;
+  id: string;
+}) {
+  const dateObj =
+    createdAt && !isNaN(new Date(createdAt).getTime())
+      ? new Date(createdAt)
+      : null;
+  const dayStr = dateObj ? dateObj.getDate().toString().padStart(2, "0") : "-";
+  const monthYearStr = dateObj
+    ? dateObj.toLocaleDateString("id-ID", {
+        month: "short",
+        year: "numeric",
+      })
+    : "";
+
+  return (
+    <article className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl">
+      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden sm:aspect-square">
+        <div className="absolute left-2.5 top-2.5 z-20 flex min-h-12 min-w-12 flex-col items-center justify-center rounded-xl bg-primary-500 p-2 text-background shadow-lg sm:left-3 sm:top-3 sm:min-h-14 sm:min-w-14 sm:p-3">
+          <span className="text-center text-lg font-bold leading-none sm:text-3xl">
+            {dayStr}
+          </span>
+          {monthYearStr && (
+            <span className="mt-1 text-center text-[9px] font-medium leading-none sm:text-[10px]">
+              {monthYearStr}
+            </span>
+          )}
+        </div>
+        <CImage
+          src={image}
+          alt={title || "image"}
+          className="h-full w-full shrink-0 object-cover"
+          width={300}
+          height={300}
+          unoptimized
+        />
+      </div>
+      <div className="flex flex-1 flex-col gap-2 p-3.5 sm:p-4">
+        <h1 className="line-clamp-2 font-primary text-lg font-bold leading-tight text-foreground sm:text-xl">
+          {title}
+        </h1>
+        {description && (
+          <p className="line-clamp-2 text-xs text-foreground/70 sm:text-sm leading-relaxed">
+            {description}
+          </p>
+        )}
+        <Link href={id ? RTR.galleryID(id) : "#"} className="mt-auto pt-1">
+          <Button
+            className="group h-auto w-fit p-0 text-sm font-semibold text-primary-500 transition-all hover:text-primary-400 sm:text-base"
+            variant={"ghost"}
+          >
+            Selengkapnya
+            <ArrowRight className="transition-transform group-hover:translate-x-1" />
+          </Button>
+        </Link>
+      </div>
+    </article>
+  );
+}

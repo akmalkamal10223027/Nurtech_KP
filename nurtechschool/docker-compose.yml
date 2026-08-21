@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  fooddelivery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fooddelivery.landing:latest
+    container_name: fooddelivery.landing
+    command: pnpm start
+    ports:
+      - "9923:3000"
+    networks:
+      - fooddelivery
+
+networks:
+  fooddelivery:
+    external:
+      name: fooddelivery

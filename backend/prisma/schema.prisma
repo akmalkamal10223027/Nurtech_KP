@@ -1,0 +1,276 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  role      String    @default("admin")
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  articles  Article[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  documentId  String    @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  position    Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime  @default(now())
+  articles    Article[]
+}
+
+model Article {
+  id          Int       @id @default(autoincrement())
+  documentId  String    @default(uuid())
+  title       String
+  slug        String    @unique
+  description String?   @db.Text
+  content     String    @db.LongText
+  position    Int       @default(0)
+  coverUrl    String?   @db.Text
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authorId    Int?
+  author      User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime  @default(now())
+}
+
+model Banner {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  description String?  @db.Text
+  thumbnail   String?  @db.Text
+  buttonsJson Json?    // Array of { title, url, icon }
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model FeaturedProgram {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  description String?  @db.Text
+  iconUrl     String?  @db.Text
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model Extracurricular {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  description String?  @db.Text
+  iconUrl     String?  @db.Text
+  position    Int      @default(0)
+  locale      String   @default("id")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  description String?  @db.Text
+  iconUrl     String?  @db.Text
+  position    Int      @default(0)
+  locale      String   @default("id")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model Facility {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  iconUrl     String?  @db.Text
+  imageUrl    String?  @db.Text
+  position    Int      @default(0)
+  locale      String   @default("id")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model GalleryActivity {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  description String?  @db.Text
+  position    Int      @default(0)
+  thumbnail   String?  @db.Text
+  galleryJson Json?    // Array of media url objects
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model ActivitySchedule {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  time        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model FAQ {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  question    String   @db.Text
+  answer      String   @db.Text
+  category    String?  @default("Umum")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model ProfileHeadmaster {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  name        String
+  description String   @db.LongText
+  avatarUrl   String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model VisionMission {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  visi        String   @db.LongText
+  misi        String   @db.LongText
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model About {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  blocksJson  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model RegistrationRequirement {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String   @db.Text
+  position    Int      @default(0)
+  locale      String   @default("id")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model RegistrationCost {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  title       String
+  phone       String?
+  costJson    Json?    // Array of { id, label, cost }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model Contact {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  longitude   Float    @default(0.0)
+  latitude    Float    @default(0.0)
+  contactJson Json?    // Array of { id, address, social_media, phone }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model GlobalSetting {
+  id              Int      @id @default(autoincrement())
+  documentId      String   @default(uuid())
+  siteName        String   @default("Nurtech School")
+  siteDescription String?  @db.Text
+  faviconUrl      String?  @db.Text
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  shareImageUrl   String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  publishedAt     DateTime @default(now())
+}
+
+model Footer {
+  id              Int             @id @default(autoincrement())
+  documentId      String          @default(uuid())
+  menu            String
+  type            String          @default("information") // information | contact | link | about
+  data            String?         @db.Text
+  position        Int             @default(0)
+  iconUrl         String?         @db.Text
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  publishedAt     DateTime        @default(now())
+  footerSubMenus  FooterSubMenu[]
+}
+
+model FooterSubMenu {
+  id          Int      @id @default(autoincrement())
+  documentId  String   @default(uuid())
+  menu        String
+  type        String   @default("link")
+  data        String?  @db.Text
+  isActive    Boolean  @default(true)
+  position    Int      @default(0)
+  iconUrl     String?  @db.Text
+  footerId    Int?
+  footer      Footer?  @relation(fields: [footerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime @default(now())
+}
+
+model AppSection {
+  id                 Int      @id @default(autoincrement())
+  documentId         String   @default(uuid())
+  badge              String   @default("Aplikasi Mobile Sekolah")
+  title              String   @default("Aplikasi Pendukung")
+  titleHighlight     String   @default("Nurtech Boarding School")
+  description        String?  @db.Text
+  appStoreLink       String?  @db.Text
+  googlePlayLink     String?  @db.Text
+  imagesJson         Json?    // Array of media objects/urls
+  featuresJson       Json?    // Array of { id, featureTitle, featureDescription }
+  featureTitle       String?  @default("Pantau Hafalan & Presensi")
+  featureDescription String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  publishedAt        DateTime @default(now())
+}

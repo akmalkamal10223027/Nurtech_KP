@@ -1,0 +1,108 @@
+#!/usr/bin/env sh
+set -e
+
+echo ""
+echo "Running formatter..."
+pnpm run format
+
+git add .
+
+echo ""
+echo "Checking for forbidden \"use client\" in page/layout files..."
+
+FILES=$(git diff --cached --name-only | grep -E "(page|layout)\.tsx$" || true)
+
+if [ -n "$FILES" ]; then
+  BAD=""
+  for f in $FILES; do
+    if grep -q '"use client"' "$f"; then
+      BAD="$BAD $f"
+    fi
+  done
+
+  if [ -n "$BAD" ]; then
+    echo ""
+    echo "Forbidden: \"use client\" found in:"
+    echo "$BAD"
+    echo ""
+    exit 1
+  fi
+fi
+
+echo ""
+echo "Checking filename casing (kebab-case only for .tsx)..."
+
+BAD_NAMES=""
+FILES=$(git diff --cached --name-only | grep -E '\.(tsx)$' || true)
+
+for f in $FILES; do
+  # skip deleted files
+  if [ ! -f "$f" ]; then
+    continue
+  fi
+
+  BASENAME=$(basename "$f")
+
+  # strict kebab-case: lowercase letters, numbers, hyphens only
+  if ! echo "$BASENAME" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*\.(tsx)$'; then
+    BAD_NAMES="$BAD_NAMES\n $f"
+  fi
+done
+
+if [ -n "$BAD_NAMES" ]; then
+  echo ""
+  echo "Error: Invalid filename casing detected."
+  echo "All .tsx files must use kebab-case:"
+  echo "$BAD_NAMES"
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo "Checking file length (max 300 lines)..."
+
+MAX_LINES=300
+BAD_LINES=""
+
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.tsx$' || true)
+
+for f in $FILES; do
+  # skip deleted files
+  if [ ! -f "$f" ]; then
+    continue
+  fi
+
+  LINES=$(wc -l < "$f")
+
+  if [ "$LINES" -gt "$MAX_LINES" ]; then
+    BAD_LINES="$BAD_LINES\n $f ($LINES lines)"
+  fi
+done
+
+if [ -n "$BAD_LINES" ]; then
+  echo ""
+  echo "Error: File exceeds ${MAX_LINES} lines:"
+  echo "$BAD_LINES"
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo "Running security audit (high+)..."
+pnpm audit --audit-level high
+
+echo ""
+echo "Checking for large staged files..."
+
+if git diff --cached --numstat | awk '{ if ($1 > 50000) { print $2 } }' | grep -q .; then
+  echo "Error: You are trying to commit a large file."
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo "Running build..."
+pnpm build
+
+echo ""
+echo "All checks passed. Commit allowed."
