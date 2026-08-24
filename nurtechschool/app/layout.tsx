@@ -42,26 +42,34 @@ export async function generateMetadata(): Promise<Metadata> {
     .then((res) => res.json())
     .catch(() => null);
 
-  if (!global?.data) return {};
+  if (!global?.data) {
+    return {
+      icons: {
+        icon: "/images/icon/logo1.svg",
+        shortcut: "/images/icon/logo1.svg",
+        apple: "/images/icon/logo1.svg",
+      },
+    };
+  }
   const baseImage = configs.BASE_IMAGE || "";
-  const faviconUrl = baseImage + global.data.favicon?.url;
+  const faviconUrl = global.data.favicon?.url ? baseImage + global.data.favicon.url : "/images/icon/logo1.svg";
   const ogImageUrl = baseImage + global.data.defaultSeo?.shareImage?.url;
 
   return {
     title: {
-      default: global.data.defaultSeo.metaTitle || global.data.siteName,
-      template: `%s | ${global.data.siteName}`,
+      default: global.data.defaultSeo?.metaTitle || global.data.siteName || "SMP Islam Nurtech",
+      template: `%s | ${global.data.siteName || "SMP Islam Nurtech"}`,
     },
 
     description:
-      global.data.defaultSeo.metaDescription || global.data.siteDescription,
+      global.data.defaultSeo?.metaDescription || global.data.siteDescription,
 
     applicationName: global.data.siteName,
 
     icons: {
-      icon: faviconUrl,
-      shortcut: faviconUrl,
-      apple: faviconUrl,
+      icon: faviconUrl || "/images/icon/logo1.svg",
+      shortcut: faviconUrl || "/images/icon/logo1.svg",
+      apple: faviconUrl || "/images/icon/logo1.svg",
     },
 
     openGraph: {

@@ -25,14 +25,15 @@ function HeroButton({ btn, baseImage }: { btn: any; baseImage?: string }) {
       onMouseLeave={() => setHovered(false)}
     >
       <CButton
-        className={`w-auto transition-colors duration-300 px-4 sm:px-6 py-2.5 text-xs sm:text-sm font-semibold ${
+        size="sm"
+        className={`w-auto transition-colors duration-300 px-3 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs md:text-sm font-semibold ${
           hovered ? "!bg-white !text-[#DB8930]" : ""
         }`}
       >
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2">
           {iconUrl && (
             <div
-              className="relative w-4 h-4 sm:w-5 sm:h-5 shrink-0 transition-all duration-300"
+              className="relative w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 shrink-0 transition-all duration-300"
               style={{ filter: hovered ? orangeFilter : "none" }}
             >
               <CImage
@@ -83,15 +84,15 @@ export default function HeroSlide({
           animate={
             active
               ? {
-                  opacity: 1,
-                  x: 0,
-                  filter: "blur(0px)",
-                }
+                opacity: 1,
+                x: 0,
+                filter: "blur(0px)",
+              }
               : {
-                  opacity: 0,
-                  x: -80,
-                  filter: "blur(8px)",
-                }
+                opacity: 0,
+                x: -80,
+                filter: "blur(8px)",
+              }
           }
           transition={{ duration: 0.8 }}
           className="w-full lg:max-w-[500px] text-center lg:text-left flex flex-col items-center lg:items-start"
@@ -155,15 +156,15 @@ export default function HeroSlide({
           animate={
             active
               ? {
-                  opacity: 1,
-                  x: 0,
-                  scale: 1,
-                }
+                opacity: 1,
+                x: 0,
+                scale: 1,
+              }
               : {
-                  opacity: 0,
-                  x: 120,
-                  scale: 0.9,
-                }
+                opacity: 0,
+                x: 120,
+                scale: 0.9,
+              }
           }
           transition={{
             duration: 0.8,

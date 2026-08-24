@@ -27,9 +27,9 @@ export default function FAQ() {
             alt="FAQ Card Top"
             width={532}
             height={209}
-            className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px]"
+            className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
           />
-          <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-[length:100%_auto] bg-top bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
+          <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-cover bg-center bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
             <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12 w-full">
               <div className="size-12 sm:size-[75px] rounded-full bg-white/10 animate-pulse" />
               <div className="h-8 w-64 rounded-lg bg-white/10 animate-pulse" />
@@ -49,7 +49,7 @@ export default function FAQ() {
             alt="FAQ Card Bottom"
             width={310}
             height={209}
-            className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px]"
+            className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px] z-10 pointer-events-none"
           />
         </div>
       </section>
@@ -71,9 +71,9 @@ export default function FAQ() {
           alt="FAQ Card Top"
           width={532}
           height={209}
-          className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px]"
+          className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
         />
-        <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-[length:100%_auto] bg-top bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
+        <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-cover bg-center bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
           {/* Header */}
           <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12">
             <Image
@@ -174,7 +174,7 @@ export default function FAQ() {
           alt="FAQ Card Bottom"
           width={310}
           height={209}
-          className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px]"
+          className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px] z-10 pointer-events-none"
         />
       </div>
     </section>

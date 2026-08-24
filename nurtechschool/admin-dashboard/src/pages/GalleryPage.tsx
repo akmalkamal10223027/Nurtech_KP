@@ -151,11 +151,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">Galeri Dokumentasi Kegiatan</h2>
-          <p className="text-xs text-slate-500">Kelola album foto dan dokumentasi kegiatan siswa sekolah</p>
-        </div>
+      <div className="flex items-center justify-end">
         <button
           onClick={handleOpenCreate}
           className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-md shadow-emerald-600/15 border border-emerald-500/20 flex items-center gap-2 transition-all cursor-pointer"

@@ -19,7 +19,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { UPLOAD_BASE } from '../api';
+import { api, UPLOAD_BASE } from '../api';
 
 export interface SidebarProps {
   activeTab: string;
@@ -37,6 +37,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       setAdminLogo(localStorage.getItem('admin_logo') || null);
     };
     window.addEventListener('admin_logo_changed', handleLogoChange);
+
+    api.getGlobal().then((res) => {
+      const dbLogo = res?.data?.logoUrl || res?.data?.logo?.url || res?.data?.logo;
+      if (dbLogo && typeof dbLogo === 'string') {
+        setAdminLogo(dbLogo);
+        localStorage.setItem('admin_logo', dbLogo);
+      }
+    }).catch(() => { });
+
     return () => window.removeEventListener('admin_logo_changed', handleLogoChange);
   }, []);
 
@@ -57,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     { id: 'articles', label: 'Berita & Artikel', icon: Newspaper },
     { id: 'facilities', label: 'Fasilitas & Prestasi', icon: Building2 },
     { id: 'registration', label: 'Pendaftaran & Biaya', icon: FileCheck2 },
-    { id: 'faqs', label: 'FAQ / Bantuan', icon: HelpCircle },
+    { id: 'faqs', label: 'FAQ', icon: HelpCircle },
     { id: 'contact', label: 'Kontak & Alamat', icon: PhoneCall },
     { id: 'footers', label: 'Menu Footer', icon: LayoutList },
     { id: 'settings', label: 'Pengaturan', icon: Settings }
@@ -91,11 +100,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                isActive
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${isActive
                   ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70'
-              }`}
+                }`}
             >
               <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}`} />
               <span>{item.label}</span>
@@ -107,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       {/* Footer Controls */}
       <div className="p-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
         <a
-          href="/"
+          href="http://localhost:3000"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-between w-full px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"

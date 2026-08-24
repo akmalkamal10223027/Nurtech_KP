@@ -125,8 +125,8 @@ export default function ItemMiddle({ data }: ItemMiddleProps) {
     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 lg:gap-12 text-background">
       {informationData && (
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-6">
-            <div className="relative shrink-0">
+          <div className="flex items-start gap-4 sm:gap-6">
+            <div className="relative shrink-0 mt-1">
               {infoIconSrc ? (
                 <CImage
                   src={infoIconSrc}
@@ -141,15 +141,17 @@ export default function ItemMiddle({ data }: ItemMiddleProps) {
                 </div>
               )}
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
               <h2 className="font-primary font-bold text-2xl uppercase tracking-wide">
                 {informationData.menu}
               </h2>
+              {informationData.data && (
+                <p className="font-normal text-sm leading-relaxed text-background/80 max-w-sm">
+                  {informationData.data}
+                </p>
+              )}
             </div>
           </div>
-          <p className="font-normal text-sm leading-relaxed text-background/80 max-w-sm">
-            {informationData.data}
-          </p>
         </div>
       )}
 

@@ -143,13 +143,8 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({ showToast }) => 
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-black">Fasilitas & Prestasi Sekolah</h2>
-          <p className="text-xs text-black/70">Kelola sarana prasarana dan rekam jejak prestasi siswa & sekolah</p>
-        </div>
-
+      {/* Action button */}
+      <div className="flex justify-end">
         <button
           onClick={handleOpenCreate}
           className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-md shadow-emerald-600/15 border border-emerald-500/20 flex items-center gap-2 transition-all cursor-pointer"

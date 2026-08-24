@@ -180,12 +180,8 @@ export const ArticlesPage: React.FC<ArticlesPageProps> = ({ showToast, initialSu
         <CategoriesPage showToast={showToast} />
       ) : (
         <>
-          {/* Header section */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">Berita & Artikel Sekolah</h2>
-              <p className="text-xs text-slate-500">Kelola dan publikasikan kabar serta artikel seputar sekolah</p>
-            </div>
+          {/* Action button */}
+          <div className="flex justify-end">
             <button
               onClick={handleOpenCreate}
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-md shadow-emerald-600/15 border border-emerald-500/20 flex items-center gap-2 transition-all cursor-pointer shrink-0"

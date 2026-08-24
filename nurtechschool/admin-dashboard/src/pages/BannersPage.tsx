@@ -158,11 +158,7 @@ export const BannersPage: React.FC<BannersPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">Banner & Hero Section</h2>
-          <p className="text-xs text-slate-500">Kelola slider banner utama di halaman beranda (Homepage)</p>
-        </div>
+      <div className="flex items-center justify-end">
         <button
           onClick={handleOpenCreate}
           className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-md shadow-emerald-600/15 border border-emerald-500/20 flex items-center gap-2 transition-all cursor-pointer"
@@ -182,19 +178,19 @@ export const BannersPage: React.FC<BannersPageProps> = ({ showToast }) => {
         ) : (
           banners.map((b) => (
             <div key={b.id} className="glass-card rounded-2xl border border-slate-200/90 bg-white overflow-hidden group hover:border-slate-300 hover:shadow-md transition-all">
-              <div className="h-52 bg-slate-100 relative overflow-hidden">
+              <div className="h-56 sm:h-64 bg-slate-100 dark:bg-slate-800/80 relative overflow-hidden flex items-center justify-center p-2">
                 {b.thumbnail?.url ? (
                   <img
                     src={getFullImageUrl(b.thumbnail.url)}
                     alt={b.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-400">
                     <ImageIcon className="w-10 h-10" />
                   </div>
                 )}
-                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-[11px] font-mono text-emerald-700 border border-emerald-200 shadow-sm font-semibold">
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[11px] font-mono text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 shadow-sm font-semibold">
                   Posisi: #{b.position}
                 </span>
               </div>
@@ -280,8 +276,8 @@ export const BannersPage: React.FC<BannersPageProps> = ({ showToast }) => {
               </label>
             </div>
             {formData.thumbnail && (
-              <div className="mt-2 h-24 w-44 rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
-                <img src={getFullImageUrl(formData.thumbnail)} alt="Preview" className="w-full h-full object-cover" />
+              <div className="mt-2 h-28 w-48 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-1.5">
+                <img src={getFullImageUrl(formData.thumbnail)} alt="Preview" className="w-full h-full object-contain" />
               </div>
             )}
           </div>

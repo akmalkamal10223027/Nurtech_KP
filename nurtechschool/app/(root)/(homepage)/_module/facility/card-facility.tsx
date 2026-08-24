@@ -7,7 +7,10 @@ import Star from "@/components/star";
 import CImage from "@/components/custom/c-image";
 import { useMobileActive } from "@/lib/hook";
 import { cn } from "@/lib/utils";
-import { Logo1 } from "@/lib/image";
+
+const ORANGE_FILTER =
+  "brightness(0) saturate(100%) invert(51%) sepia(98%) saturate(2200%) hue-rotate(5deg) brightness(103%)";
+const WHITE_FILTER = "brightness(0) invert(1)";
 
 type FacilityCardProps = {
   icon: string | StaticImageData;
@@ -45,6 +48,8 @@ export function CardFacility({
     onMouseLeave?.();
   };
 
+  const isCardActive = isHovered || isActive;
+
   if (variant === "compact") {
     return (
       <div
@@ -57,17 +62,17 @@ export function CardFacility({
         onMouseLeave={handleMouseLeave}
       >
         <Star
-          forceHover={isHovered || isActive}
+          forceHover={isCardActive}
           className="absolute left-8 top-1/2 z-30 size-[76px] -translate-x-1/2 -translate-y-1/2"
         >
           {icon && validUrl && (
             <CImage
               src={icon}
               alt={title}
-              className={cn(
-                "object-contain transition-all duration-300 group-hover:invert",
-                (isHovered || isActive) && "invert",
-              )}
+              className="object-contain transition-all duration-300 group-hover:scale-110"
+              style={{
+                filter: isCardActive ? ORANGE_FILTER : WHITE_FILTER,
+              }}
               width={28}
               height={28}
               animationHover={false}
@@ -93,7 +98,7 @@ export function CardFacility({
       onMouseLeave={handleMouseLeave}
     >
       <Star
-        forceHover={isHovered || isActive}
+        forceHover={isCardActive}
         className={clsx(
           "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 size-[90px]",
           starClassName,
@@ -103,13 +108,14 @@ export function CardFacility({
           <CImage
             src={icon}
             alt={title}
-            className={cn(
-              "object-contain group-hover:scale-110 transition-all duration-300 group-hover:invert",
-              isActive && "invert",
-            )}
+            className="object-contain group-hover:scale-110 transition-all duration-300"
+            style={{
+              transform: `rotate(-${rotate}deg)`,
+              filter: isCardActive ? ORANGE_FILTER : WHITE_FILTER,
+            }}
             width={40}
             height={40}
-            style={{ transform: `rotate(-${rotate}deg)` }}
+            animationHover={false}
           />
         )}
       </Star>

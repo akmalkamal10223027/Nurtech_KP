@@ -132,11 +132,6 @@ export const AppSectionPage: React.FC<AppSectionPageProps> = ({ showToast }) => 
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Aplikasi Boarding School & Mobile App</h2>
-        <p className="text-xs text-slate-500">Kelola promosi aplikasi pendukung santri/orang tua, link download, dan mockup HP</p>
-      </div>
-
       <form onSubmit={handleSaveApp} className="glass-card rounded-2xl p-6 border border-slate-200/90 bg-white space-y-6 max-w-3xl shadow-sm">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <Smartphone className="w-5 h-5 text-emerald-600" />

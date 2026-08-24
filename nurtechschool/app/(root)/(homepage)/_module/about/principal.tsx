@@ -30,9 +30,9 @@ export default function PrincipalSection({
       />
       <div className="flex flex-col gap-2.5 sm:gap-4 text-center lg:text-left">
         <div>
-          <h2 className="font-primary font-bold text-base sm:text-xl md:text-[23px] text-black leading-tight">
+          <h2 className="font-primary font-bold text-base sm:text-xl md:text-[23px] text-black">
             {headmasterName}
-            <span className="block mt-1 text-xs sm:text-sm md:text-base font-semibold text-gray-500">
+            <span className="block mt-1 text-xs sm:text-sm md:text-base font-bold text-black-500">
               {headmasterRole || "Kepala Sekolah SMP Islam Nurtech"}
             </span>
           </h2>

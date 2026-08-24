@@ -24,14 +24,14 @@ export default function CTabs({
 }: CTabsProps) {
   if (variant === "pills") {
     return (
-      <div className={cn("flex justify-center w-full px-2 sm:px-0", className)}>
-        <div className="flex items-center justify-between w-full max-w-md sm:max-w-xl md:w-auto bg-secondary-500 rounded-full p-1 shadow-md">
+      <div className={cn("flex justify-center w-full px-2 sm:px-0 overflow-x-auto no-scrollbar", className)}>
+        <div className="inline-flex items-center justify-center bg-secondary-500 rounded-full p-1 shadow-md gap-1">
           {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => onTabChange(tab.value)}
               className={cn(
-                "flex-1 px-3 sm:px-8 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-center truncate",
+                "px-4 sm:px-8 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-center whitespace-nowrap shrink-0",
                 activeTab === tab.value
                   ? "bg-primary-500 text-white shadow"
                   : "bg-transparent text-white hover:text-primary-300",

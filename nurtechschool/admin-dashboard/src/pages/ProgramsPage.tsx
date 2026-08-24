@@ -131,13 +131,8 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-black">Program Unggulan & Ekstrakurikuler</h2>
-          <p className="text-xs text-black/70">Kelola bidang studi keahlian dan kegiatan pengembangan diri siswa</p>
-        </div>
-
+      {/* Action button */}
+      <div className="flex justify-end">
         <button
           onClick={handleOpenCreate}
           className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-md shadow-emerald-600/15 border border-emerald-500/20 flex items-center gap-2 transition-all cursor-pointer"
@@ -152,7 +147,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({ showToast }) => {
         <button
           onClick={() => setActiveSubTab('programs')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${activeSubTab === 'programs'
-            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm'
+            ? 'bg-emerald-50 text-emerald-700 border-emerald-600 shadow-sm'
             : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
             }`}
         >

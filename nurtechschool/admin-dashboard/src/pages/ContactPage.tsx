@@ -134,11 +134,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Kontak, Alamat & Peta Lokasi Sekolah</h2>
-        <p className="text-xs text-slate-500">Kelola nomor telepon, alamat fisik, akun sosial media, dan koordinat peta sekolah</p>
-      </div>
-
       <form onSubmit={handleSaveContact} className="glass-card rounded-2xl p-6 border border-slate-200/90 bg-white space-y-5 max-w-2xl shadow-sm">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
           <PhoneCall className="w-5 h-5 text-emerald-600" />

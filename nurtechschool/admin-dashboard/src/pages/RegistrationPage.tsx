@@ -98,11 +98,6 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({ showToast })
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Informasi Pendaftaran & Biaya PPDB</h2>
-        <p className="text-xs text-slate-500">Kelola rincian biaya pendaftaran, kontak admin PPDB, serta syarat-syarat pendaftaran</p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Rincian Biaya Form */}
         <form onSubmit={handleSaveCost} className="glass-card rounded-2xl p-6 border border-slate-200/90 bg-white space-y-4 shadow-sm">

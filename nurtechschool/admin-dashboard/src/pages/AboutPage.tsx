@@ -121,11 +121,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900">Profil & Visi Misi Sekolah</h2>
-        <p className="text-xs text-slate-500">Kelola profil pimpinan, motto utama, serta visi & misi sekolah</p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Profile Section */}
         <form onSubmit={handleSaveProfile} className="glass-card rounded-2xl p-6 border border-slate-200/90 bg-white space-y-4 shadow-sm">

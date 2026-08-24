@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Lock, Sun, Moon, Monitor, User, Save, ShieldCheck, Check, Eye, EyeOff, Image as ImageIcon, Upload, RefreshCw } from 'lucide-react';
+import { Lock, Sun, Moon, Monitor, User, Save, ShieldCheck, Check, Eye, EyeOff, Image as ImageIcon, Upload, RefreshCw } from 'lucide-react';
 import { api, UPLOAD_BASE } from '../api';
 
 export interface SettingsPageProps {
@@ -7,7 +7,7 @@ export interface SettingsPageProps {
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'password' | 'theme' | 'logo' | 'profile' | 'seo'>('password');
+  const [activeSubTab, setActiveSubTab] = useState<'password' | 'theme' | 'logo' | 'profile'>('password');
   const [loading, setLoading] = useState(false);
 
   // Password state
@@ -40,15 +40,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
   });
   const [profileLoading, setProfileLoading] = useState(false);
 
-  // Global SEO state
-  const [global, setGlobal] = useState({
-    siteName: '',
-    siteDescription: '',
-    metaTitle: '',
-    metaDescription: ''
-  });
-  const [globalLoading, setGlobalLoading] = useState(false);
-
   useEffect(() => {
     fetchInitialData();
   }, []);
@@ -56,19 +47,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
-      const [globRes, meRes] = await Promise.all([
-        api.getGlobal().catch(() => ({ data: {} })),
-        api.getMe().catch(() => null)
-      ]);
-
-      if (globRes?.data) {
-        setGlobal({
-          siteName: globRes.data.siteName || '',
-          siteDescription: globRes.data.siteDescription || '',
-          metaTitle: globRes.data.defaultSeo?.metaTitle || globRes.data.metaTitle || '',
-          metaDescription: globRes.data.defaultSeo?.metaDescription || globRes.data.metaDescription || ''
-        });
-      }
+      const meRes = await api.getMe().catch(() => null);
 
       if (meRes) {
         setProfile({
@@ -79,7 +58,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
         });
       }
     } catch (err: any) {
-      console.error('Failed to load settings data:', err);
+      console.error('Failed to load profile data:', err);
     } finally {
       setLoading(false);
     }
@@ -102,6 +81,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    window.dispatchEvent(new Event('admin_theme_changed'));
     showToast(`Mode tampilan diubah ke ${mode === 'dark' ? 'Mode Gelap' : mode === 'light' ? 'Mode Terang' : 'Sistem'}`, 'success');
   };
 
@@ -137,6 +117,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     }
   };
 
+  // Initial Load for Logo
+  useEffect(() => {
+    api.getGlobal().then((res) => {
+      const dbLogo = res?.data?.logoUrl || res?.data?.logo?.url || res?.data?.logo;
+      if (dbLogo && typeof dbLogo === 'string') {
+        setLogoUrl(dbLogo);
+        localStorage.setItem('admin_logo', dbLogo);
+      }
+    }).catch(() => {});
+  }, []);
+
   // Logo Upload
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -156,23 +147,34 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     }
   };
 
-  const handleSaveLogo = (e: React.FormEvent) => {
+  const handleSaveLogo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!logoUrl.trim()) {
       showToast('URL foto logo tidak boleh kosong', 'error');
       return;
     }
 
-    localStorage.setItem('admin_logo', logoUrl.trim());
-    window.dispatchEvent(new Event('admin_logo_changed'));
-    showToast('Logo dashboard admin berhasil diperbarui!', 'success');
+    try {
+      const cleanUrl = logoUrl.trim();
+      await api.updateGlobal({ logoUrl: cleanUrl });
+      localStorage.setItem('admin_logo', cleanUrl);
+      window.dispatchEvent(new Event('admin_logo_changed'));
+      showToast('Logo dashboard admin berhasil disimpan secara permanen ke database!', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menyimpan logo ke database', 'error');
+    }
   };
 
-  const handleResetLogo = () => {
-    localStorage.removeItem('admin_logo');
-    setLogoUrl('');
-    window.dispatchEvent(new Event('admin_logo_changed'));
-    showToast('Logo dashboard direset ke tampilan ikon standar!', 'info');
+  const handleResetLogo = async () => {
+    try {
+      await api.updateGlobal({ logoUrl: null });
+      localStorage.removeItem('admin_logo');
+      setLogoUrl('');
+      window.dispatchEvent(new Event('admin_logo_changed'));
+      showToast('Logo dashboard direset ke tampilan ikon standar!', 'info');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal mereset logo di database', 'error');
+    }
   };
 
   // Save Profile
@@ -189,27 +191,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     }
   };
 
-  // Save Global & SEO
-  const handleSaveGlobal = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setGlobalLoading(true);
-      await api.updateGlobal({
-        siteName: global.siteName,
-        siteDescription: global.siteDescription,
-        defaultSeo: {
-          metaTitle: global.metaTitle,
-          metaDescription: global.metaDescription
-        }
-      });
-      showToast('Pengaturan SEO & Identitas Website disimpan!', 'success');
-    } catch (err: any) {
-      showToast(err.message || 'Gagal menyimpan SEO website', 'error');
-    } finally {
-      setGlobalLoading(false);
-    }
-  };
-
   const previewLogoSrc = logoUrl
     ? logoUrl.startsWith('http')
       ? logoUrl
@@ -218,13 +199,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Pengaturan Dashboard & Website</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Kelola kata sandi admin, tema antarmuka, logo sekolah, serta identitas website
-        </p>
-      </div>
-
       {/* Sub-Tab Navigation */}
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
         <button
@@ -274,18 +248,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
           <User className="w-4 h-4" />
           <span>Profil Admin</span>
         </button>
-
-        <button
-          onClick={() => setActiveSubTab('seo')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-            activeSubTab === 'seo'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Globe className="w-4 h-4" />
-          <span>Identitas & SEO</span>
-        </button>
       </div>
 
       {/* Tab 1: Ubah Sandi */}
@@ -307,13 +269,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
                 required
                 value={passwordData.currentPassword}
                 onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                placeholder="Masukkan kata sandi lama..."
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500 pr-10"
+                placeholder="••••••••"
+                className="w-full px-3.5 py-2 pr-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
               />
               <button
                 type="button"
                 onClick={() => setShowCurrentPass(!showCurrentPass)}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -329,12 +291,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
                 value={passwordData.newPassword}
                 onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                 placeholder="Minimal 6 karakter..."
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500 pr-10"
+                className="w-full px-3.5 py-2 pr-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
               />
               <button
                 type="button"
                 onClick={() => setShowNewPass(!showNewPass)}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -359,30 +321,29 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
             className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-600/15 disabled:opacity-50"
           >
             <Save className="w-4 h-4 text-white" />
-            <span>{passLoading ? 'Menyimpan...' : 'Simpan Kata Sandi Baru'}</span>
+            <span>{passLoading ? 'Menyimpan...' : 'Perbarui Kata Sandi'}</span>
           </button>
         </form>
       )}
 
-      {/* Tab 2: Mode Gelap / Terang */}
+      {/* Tab 2: Theme Mode */}
       {activeSubTab === 'theme' && (
-        <div className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-5 max-w-2xl shadow-sm">
+        <div className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 max-w-2xl shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
             <Sun className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Mode Tampilan Dashboard</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Pilih skema warna antarmuka yang nyaman untuk aktivitas Anda</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Mode Tampilan Antarmuka</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Pilih tema preferensi untuk panel admin Anda</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Light Mode Card */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div
               onClick={() => applyTheme('light')}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col items-center justify-between text-center gap-3 relative ${
+              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
                 themeMode === 'light'
-                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 shadow-sm ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300'
+                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
+                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
               }`}
             >
               {themeMode === 'light' && (
@@ -390,22 +351,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
                   <Check className="w-3 h-3" />
                 </span>
               )}
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 flex items-center justify-center shadow-xs">
                 <Sun className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Terang (Light)</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tampilan cerah & bersih</p>
+                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Terang</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tampilan bersih dengan latar cerah</p>
               </div>
             </div>
 
-            {/* Dark Mode Card */}
             <div
               onClick={() => applyTheme('dark')}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col items-center justify-between text-center gap-3 relative ${
+              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
                 themeMode === 'dark'
-                  ? 'border-emerald-500 bg-slate-800 text-white shadow-sm ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300'
+                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
+                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
               }`}
             >
               {themeMode === 'dark' && (
@@ -413,22 +373,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
                   <Check className="w-3 h-3" />
                 </span>
               )}
-              <div className="w-12 h-12 rounded-xl bg-indigo-900 text-indigo-300 flex items-center justify-center shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-slate-800 text-slate-200 dark:bg-slate-950 dark:text-slate-100 flex items-center justify-center shadow-xs">
                 <Moon className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Gelap (Dark)</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Nyaman untuk mata malam hari</p>
+                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Gelap</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tampilan gelap yang nyaman di mata</p>
               </div>
             </div>
 
-            {/* System Preference */}
             <div
               onClick={() => applyTheme('system')}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col items-center justify-between text-center gap-3 relative ${
+              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
                 themeMode === 'system'
-                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 shadow-sm ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300'
+                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
+                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
               }`}
             >
               {themeMode === 'system' && (
@@ -571,75 +530,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
           >
             <Save className="w-4 h-4 text-white" />
             <span>{profileLoading ? 'Menyimpan Profil...' : 'Simpan Profil Admin'}</span>
-          </button>
-        </form>
-      )}
-
-      {/* Tab 5: Identitas Website & SEO Meta */}
-      {activeSubTab === 'seo' && (
-        <form onSubmit={handleSaveGlobal} className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 max-w-2xl shadow-sm">
-          <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-            <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Identitas Website & Optimasi SEO</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Atur nama instansi, deskripsi publikasi, serta meta tags untuk mesin pencari Google</p>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Website / Sekolah</label>
-            <input
-              type="text"
-              required
-              value={global.siteName}
-              onChange={(e) => setGlobal({ ...global, siteName: e.target.value })}
-              placeholder="Nurtech School"
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Deskripsi Umum Website</label>
-            <textarea
-              rows={3}
-              value={global.siteDescription}
-              onChange={(e) => setGlobal({ ...global, siteDescription: e.target.value })}
-              placeholder="Deskripsi singkat seputar sekolah..."
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Meta Title (SEO Google)</label>
-              <input
-                type="text"
-                value={global.metaTitle}
-                onChange={(e) => setGlobal({ ...global, metaTitle: e.target.value })}
-                placeholder="Nurtech School - Islamic Tech Boarding School"
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Meta Description (SEO Google)</label>
-              <textarea
-                rows={3}
-                value={global.metaDescription}
-                onChange={(e) => setGlobal({ ...global, metaDescription: e.target.value })}
-                placeholder="Deskripsi pencarian di mesin pencari Google..."
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={globalLoading}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-600/15 disabled:opacity-50"
-          >
-            <Save className="w-4 h-4 text-white" />
-            <span>{globalLoading ? 'Menyimpan Identitas...' : 'Simpan Pengaturan SEO'}</span>
           </button>
         </form>
       )}

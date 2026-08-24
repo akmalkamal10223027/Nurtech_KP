@@ -59,7 +59,7 @@ export default function Star({
       <motion.div
         className="relative z-10 text-4xl font-bold text-white rounded-2xl"
         animate={{
-          color: hovered ? "var(--foreground)" : "#ffffff",
+          color: hovered ? "var(--primary)" : "#ffffff",
         }}
         transition={{ duration: 0.3 }}
       >
