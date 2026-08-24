@@ -218,6 +218,7 @@ model GlobalSetting {
   documentId      String   @default(uuid())
   siteName        String   @default("Nurtech School")
   siteDescription String?  @db.Text
+  logoUrl         String?  @db.Text
   faviconUrl      String?  @db.Text
   metaTitle       String?
   metaDescription String?  @db.Text

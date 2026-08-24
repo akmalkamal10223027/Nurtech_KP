@@ -398,7 +398,16 @@ const updateContactUs = async (req, res, next) => {
 // Global Settings & SEO
 const getGlobal = async (req, res, next) => {
   try {
-    let global = await prisma.globalSetting.findFirst();
+    let global = await prisma.globalSetting.findFirst().catch(() => null);
+    let logoUrlVal = global?.logoUrl || null;
+
+    try {
+      const rows = await prisma.$queryRawUnsafe('SELECT * FROM GlobalSetting LIMIT 1');
+      if (rows && rows.length > 0) {
+        logoUrlVal = rows[0].logoUrl || rows[0].logo_url || logoUrlVal;
+      }
+    } catch (e) {}
+
     if (!global) {
       global = await prisma.globalSetting.create({
         data: {
@@ -415,6 +424,8 @@ const getGlobal = async (req, res, next) => {
       documentId: global.documentId,
       siteName: global.siteName,
       siteDescription: global.siteDescription || '',
+      logoUrl: logoUrlVal,
+      logo: formatMedia(logoUrlVal),
       favicon: formatMedia(global.faviconUrl),
       defaultSeo: {
         id: 1,
@@ -439,7 +450,7 @@ const getGlobal = async (req, res, next) => {
 
 const updateGlobal = async (req, res, next) => {
   try {
-    const { siteName, siteDescription, faviconUrl, metaTitle, metaDescription, shareImageUrl } = req.body;
+    const { siteName, siteDescription, logoUrl, faviconUrl, metaTitle, metaDescription, shareImageUrl } = req.body;
     let global = await prisma.globalSetting.findFirst();
 
     if (!global) {
@@ -467,7 +478,33 @@ const updateGlobal = async (req, res, next) => {
       });
     }
 
-    return res.json({ data: global });
+    if (logoUrl !== undefined) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `UPDATE GlobalSetting SET logoUrl=? WHERE id > 0`,
+          logoUrl || null
+        );
+      } catch (e) {
+        try {
+          await prisma.$executeRawUnsafe(`ALTER TABLE GlobalSetting ADD COLUMN logoUrl TEXT`);
+          await prisma.$executeRawUnsafe(
+            `UPDATE GlobalSetting SET logoUrl=? WHERE id > 0`,
+            logoUrl || null
+          );
+        } catch (err2) {}
+      }
+    }
+
+    const updatedRows = await prisma.$queryRawUnsafe('SELECT * FROM GlobalSetting LIMIT 1').catch(() => null);
+    const finalLogo = updatedRows && updatedRows[0] ? (updatedRows[0].logoUrl || updatedRows[0].logo_url) : logoUrl;
+
+    return res.json({
+      data: {
+        ...global,
+        logoUrl: finalLogo,
+        logo: formatMedia(finalLogo)
+      }
+    });
   } catch (err) {
     next(err);
   }
