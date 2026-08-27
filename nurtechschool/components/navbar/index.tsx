@@ -50,75 +50,78 @@ export default function Navbar() {
   const website = configs.WEBSITE_URL;
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className={cn(
-            "fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ease-in-out bg-background text-secondary-500",
-          )}
-        >
-          <div className="p-6 container relative">
-            <Link href={RTR.home()} className="cursor-pointer">
-              <Image
-                src={Logo}
-                alt="Logo"
-                width={100}
-                height={100}
-                className="absolute top-0 left-8"
-              />
-            </Link>
-            <div className="flex items-center gap-5 pl-34 md:justify-between justify-end ">
-              <div className="hidden md:flex items-center gap-3">
-                {CONTENT.map((item, idx) => (
-                  <CLinkScroll
-                    key={idx}
-                    to={item.id}
-                    offset={-100}
-                    activeClass="!text-white shadow-lg rounded-full bg-[F8E8D3]"
-                  >
-                    <div className="px-4 py-2 rounded-full bg-[F8E8D3] text-secondary-500 font-semibold text-sm transition-all duration-300 hover:bg-[#DB8930] hover:text-white hover:-translate-y-0.5 hover:shadow-lg cursor-pointer">
-                      {item.label}
-                    </div>
-                  </CLinkScroll>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <MenuIcon
-                  fill="#004937"
-                  className="cursor-pointer md:hidden"
-                  onClick={() => setIsMenuOpen(true)}
+    <>
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            key="navbar-floating-header"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className={cn(
+              "fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ease-in-out bg-background text-secondary-500",
+            )}
+          >
+            <div className="p-6 container relative">
+              <Link href={RTR.home()} className="cursor-pointer">
+                <Image
+                  src={Logo}
+                  alt="Logo"
+                  width={100}
+                  height={100}
+                  className="absolute top-0 left-8"
                 />
-
-                {website && (
-                  <div
-                    onMouseEnter={() => setIsDaftarHovered(true)}
-                    onMouseLeave={() => setIsDaftarHovered(false)}
-                  >
-                    <CButton
-                      size={"sm"}
-                      icon={
-                        <BookArchiveIcon
-                          fill={isDaftarHovered ? "#DB8930" : "#fff"}
-                        />
-                      }
-                      className={`font-bold md:flex hidden transition-colors duration-300 ${isDaftarHovered ? "!bg-white !text-[#DB8930]" : ""}`}
-                      onClick={() => handleClick(website)}
+              </Link>
+              <div className="flex items-center gap-5 pl-34 md:justify-between justify-end ">
+                <div className="hidden md:flex items-center gap-3">
+                  {CONTENT.map((item, idx) => (
+                    <CLinkScroll
+                      key={idx}
+                      to={item.id}
+                      offset={-100}
+                      activeClass="!text-white shadow-lg rounded-full bg-[F8E8D3]"
                     >
-                      Daftar Sekarang
-                    </CButton>
-                  </div>
-                )}
+                      <div className="px-4 py-2 rounded-full bg-[F8E8D3] text-secondary-500 font-semibold text-sm transition-all duration-300 hover:bg-[#DB8930] hover:text-white hover:-translate-y-0.5 hover:shadow-lg cursor-pointer">
+                        {item.label}
+                      </div>
+                    </CLinkScroll>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <MenuIcon
+                    fill="#004937"
+                    className="cursor-pointer md:hidden"
+                    onClick={() => setIsMenuOpen(true)}
+                  />
+
+                  {website && (
+                    <div
+                      onMouseEnter={() => setIsDaftarHovered(true)}
+                      onMouseLeave={() => setIsDaftarHovered(false)}
+                    >
+                      <CButton
+                        size={"sm"}
+                        icon={
+                          <BookArchiveIcon
+                            fill={isDaftarHovered ? "#DB8930" : "#fff"}
+                          />
+                        }
+                        className={`font-bold md:flex hidden transition-colors duration-300 ${isDaftarHovered ? "!bg-white !text-[#DB8930]" : ""}`}
+                        onClick={() => handleClick(website)}
+                      >
+                        Daftar Sekarang
+                      </CButton>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <SidebarMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-    </AnimatePresence>
+    </>
   );
 }

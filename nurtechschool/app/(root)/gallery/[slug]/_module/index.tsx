@@ -12,17 +12,13 @@ export default function GalleryDetail({ slug }: { slug: string }) {
   });
 
   return (
-    <div className="min-h-screen">
-      <Hero title={respGalleryDetail?.data?.title} />
-      <div className="flex flex-col gap-40">
-        <div className="container flex flex-col gap-40 overflow-hidden pb-16">
-          <Content
-            gallery={respGalleryDetail?.data?.gallery}
-            description={respGalleryDetail?.data?.description}
-            isLoading={isLoadingGalleryDetail}
-          />
-        </div>
-      </div>
+    <div className="min-h-screen pb-16">
+      <Hero title={respGalleryDetail?.data?.title || "Detail Galeri"} />
+      <Content
+        gallery={respGalleryDetail?.data?.gallery}
+        description={respGalleryDetail?.data?.description}
+        isLoading={isLoadingGalleryDetail}
+      />
     </div>
   );
 }

@@ -17,7 +17,7 @@ export default function CHeaderHero({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-end h-full pb-16 gap-1",
+        "flex flex-col items-center justify-end h-full pb-8 sm:pb-12 md:pb-16 px-4 text-center gap-1",
         className,
       )}
     >

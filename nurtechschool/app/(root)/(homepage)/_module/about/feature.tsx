@@ -19,8 +19,8 @@ export default function Feature({
     >
       <Mapper
         className={cn(
-          "grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 w-full max-w-6xl px-4",
-          "max-lg:[&>li:first-child]:col-span-2 max-lg:[&>li:first-child]:flex max-lg:[&>li:first-child]:justify-center",
+          "grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6 w-full max-w-3xl lg:max-w-4xl px-4",
+          "max-md:[&>li:first-child]:col-span-2 max-md:[&>li:first-child]:flex max-md:[&>li:first-child]:justify-center",
         )}
         data={respAchievement?.data}
         isLoading={isLoading}
@@ -33,7 +33,7 @@ export default function Feature({
             subtitle={item.description}
             className={cn(
               "h-full w-full",
-              index === 0 && "max-lg:w-[calc(50%-0.25rem)]",
+              index === 0 && "max-md:w-[calc(50%-0.375rem)] md:w-full",
             )}
           />
         )}

@@ -23,9 +23,18 @@ const CImage = ({
   const [isError, setIsError] = useState(false);
 
   const sanitizeSrc = (input: any) => {
+    if (!input) return "";
     if (typeof input === "string") {
       let str = input.trim();
-      if (!str) return "";
+      if (
+        !str ||
+        str === "undefined" ||
+        str === "null" ||
+        str.includes("undefined") ||
+        str.includes("null")
+      ) {
+        return "";
+      }
       if (str.includes("http://") && str.includes("https://")) {
         const httpsIdx = str.indexOf("https://");
         if (httpsIdx > 0) str = str.substring(httpsIdx);

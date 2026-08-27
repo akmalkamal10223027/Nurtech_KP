@@ -42,13 +42,13 @@ export const AppSectionPage: React.FC<AppSectionPageProps> = ({ showToast }) => 
         const featList = item.features || item.Stakeholder?.[0]?.featureitem || [];
         const parsedFeatures = Array.isArray(featList) && featList.length > 0
           ? featList.map((f: any, idx: number) => ({
-              id: f.id || idx + 1,
-              featureTitle: f.featureTitle || f.title || '',
-              featureDescription: f.featureDescription || f.description || ''
-            }))
+            id: f.id || idx + 1,
+            featureTitle: f.featureTitle || f.title || '',
+            featureDescription: f.featureDescription || f.description || ''
+          }))
           : [
-              { id: 1, featureTitle: 'Pantau Hafalan & Presensi', featureDescription: 'Laporan perkembangan santri dikirim langsung ke smartphone orang tua.' }
-            ];
+            { id: 1, featureTitle: 'Pantau Hafalan & Presensi', featureDescription: 'Laporan perkembangan santri dikirim langsung ke smartphone orang tua.' }
+          ];
 
         setAppData({
           badge: item.badge || 'Aplikasi Mobile Sekolah',
@@ -210,7 +210,6 @@ export const AppSectionPage: React.FC<AppSectionPageProps> = ({ showToast }) => 
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-xs font-bold text-emerald-900 uppercase tracking-wider">Fitur Transisi Aplikasi (Orang Tua & Santri)</h4>
-              <p className="text-[11px] text-slate-500">Tambahkan beberapa fitur yang akan berganti slide secara otomatis di situs publik</p>
             </div>
             <button
               type="button"

@@ -55,7 +55,7 @@ export function CardProgram({
     <div
       ref={ref}
       className={clsx(
-        "relative group ml-10 sm:ml-14 transition-all duration-300 hover:drop-shadow-xl bg-linear-to-r from-[#FFF5D7] w-[calc(100%-40px)] sm:w-[calc(100%-56px)] cursor-pointer",
+        "relative group ml-9 sm:ml-12 md:ml-14 transition-all duration-300 hover:drop-shadow-xl bg-linear-to-r from-[#FFF5D7] w-[calc(100%-36px)] sm:w-[calc(100%-48px)] md:w-[calc(100%-56px)] cursor-pointer",
         className,
       )}
       style={{ transform: rotate ? `rotate(-${rotate}deg)` : undefined }}
@@ -65,14 +65,14 @@ export function CardProgram({
       <Star
         forceHover={isCardActive}
         className={clsx(
-          "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 size-[90px] sm:size-[122px]",
+          "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 size-[80px] sm:size-[100px] md:size-[122px]",
           starClassName,
         )}
       >
         {componentIcon ? (
           <div
             className={cn(
-              "w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 [&>svg]:size-6 sm:[&>svg]:size-8 group-hover:text-primary-500",
+              "w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 [&>svg]:size-5 sm:[&>svg]:size-7 md:[&>svg]:size-8 group-hover:text-primary-500",
               isCardActive ? "text-primary-500" : "text-white",
             )}
             style={{ transform: rotate ? `rotate(-${rotate}deg)` : undefined }}
@@ -84,7 +84,7 @@ export function CardProgram({
             <CImage
               src={icon}
               alt={title}
-              className="w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-110 transition-all duration-300"
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 object-contain group-hover:scale-110 transition-all duration-300"
               style={{
                 transform: rotate ? `rotate(-${rotate}deg)` : undefined,
                 filter: isCardActive ? ORANGE_FILTER : WHITE_FILTER,
@@ -97,17 +97,21 @@ export function CardProgram({
         )}
       </Star>
       <div
-        className={`relative rounded-xl w-full min-h-[100px] sm:min-h-[122px] overflow-hidden bg-[url('/images/icon/card-horizontal.svg')] bg-no-repeat bg-cover bg-center pr-4 sm:pr-8 ${rotate ? `pr-14 sm:pr-20` : `pl-14 sm:pl-20`} flex items-center shrink-0 py-3 sm:py-4`}
+        className={`relative rounded-xl w-full min-h-[90px] sm:min-h-[105px] md:min-h-[122px] overflow-hidden bg-[url('/images/icon/card-horizontal.svg')] bg-no-repeat bg-cover bg-center pr-4 sm:pr-6 md:pr-8 ${
+          rotate
+            ? `pr-13 sm:pr-16 md:pr-20 pl-3 sm:pl-5`
+            : `pl-13 sm:pl-16 md:pl-20`
+        } flex items-center shrink-0 py-2.5 sm:py-3.5 md:py-4`}
       >
         <div
-          className="relative z-10 flex flex-col items-start text-left w-full gap-1"
+          className="relative z-10 flex flex-col items-start text-left w-full gap-0.5 sm:gap-1"
           style={{ transform: rotate ? `rotate(-${rotate}deg)` : undefined }}
         >
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-primary-950 uppercase tracking-tight font-serif line-clamp-2 leading-tight">
+          <h3 className="text-sm sm:text-base md:text-xl font-bold text-primary-950 uppercase tracking-tight font-serif line-clamp-2 leading-tight">
             {title}
           </h3>
           {description && (
-            <p className="text-xs sm:text-sm font-medium text-primary-950/80 line-clamp-3 leading-snug">
+            <p className="text-[11px] sm:text-xs md:text-sm font-medium text-primary-950/80 line-clamp-2 sm:line-clamp-3 leading-snug">
               {description}
             </p>
           )}

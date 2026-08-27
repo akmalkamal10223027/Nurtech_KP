@@ -1,12 +1,14 @@
 import CImage from "@/components/custom/c-image";
 import { AnimatePresence, motion } from "motion/react";
-import { configs } from "@/lib/constants";
-
+import { getImageUrl } from "@/lib/utils";
 import { useState } from "react";
 
 export default function CardExcul({ item }: { item: IExtracurricularData }) {
   const [isClicked, setIsClicked] = useState(false);
-  const baseImage = configs.BASE_IMAGE;
+  const iconUrl =
+    typeof item?.icon === "string" ? item.icon : item?.icon?.url;
+  const imageUrl = getImageUrl(iconUrl);
+
   return (
     <div
       className="flex flex-col items-center justify-center w-full gap-2 sm:gap-3 p-3 h-full sm:p-5 rounded-[10px] border border-black bg-cream shadow-[0_4px_8px_3px_rgba(0,0,0,0.15),0_1px_3px_0_rgba(0,0,0,0.30)] hover:scale-105 transition-transform duration-200 cursor-pointer"
@@ -14,8 +16,8 @@ export default function CardExcul({ item }: { item: IExtracurricularData }) {
     >
       <div className="flex items-center justify-center shrink-0">
         <CImage
-          src={baseImage + item?.icon?.url}
-          alt="Icon"
+          src={imageUrl}
+          alt={item?.title || "Icon"}
           width={100}
           height={100}
           animationHover={false}
@@ -27,6 +29,7 @@ export default function CardExcul({ item }: { item: IExtracurricularData }) {
       <AnimatePresence>
         {isClicked && (
           <motion.div
+            key="card-excul-content"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

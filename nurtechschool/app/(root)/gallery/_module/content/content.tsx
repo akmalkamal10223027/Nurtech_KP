@@ -11,49 +11,64 @@ import { getImageUrl } from "@/lib/utils";
 
 export default function Content() {
   const [searchValue, setSearchValue] = useState("");
-  const debouncedSearchValue = useDebounce(searchValue, 500);
+  const debouncedSearchValue = useDebounce(searchValue, 300);
   const [selectedMonth, setSelectedMonth] = useState("all");
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
-  const query = {
-    populate: ["gallery", "thumbnail"],
 
-    filters: {
-      ...(debouncedSearchValue && {
-        title: {
-          $containsi: debouncedSearchValue,
-        },
-      }),
+  const { respGalleryActivity, isLoadingGalleryActivity } =
+    useGalleryActivity();
 
-      ...(selectedMonth !== "all" &&
-        selectedMonth && {
-          createdAt: {
-            $between: [
-              `${new Date().getFullYear()}-${selectedMonth}-01`,
-              `${new Date().getFullYear()}-${selectedMonth}-31`,
-            ],
-          },
-        }),
-    },
+  const allItems = React.useMemo(() => {
+    return respGalleryActivity?.data || [];
+  }, [respGalleryActivity?.data]);
 
-    pagination: {
-      page: currentPage,
-      pageSize: itemsPerPage,
-    },
-  };
-  const { respGalleryActivity, metaGalleryActivity, isLoadingGalleryActivity } =
-    useGalleryActivity(query);
+  // Synchronized search & month filtering
+  const filteredItems = React.useMemo(() => {
+    return allItems.filter((item) => {
+      // 1. Search Query Filter (Title & Description)
+      if (debouncedSearchValue.trim()) {
+        const query = debouncedSearchValue.toLowerCase().trim();
+        const titleMatch = item?.title?.toLowerCase().includes(query);
+        const descMatch = item?.description?.toLowerCase().includes(query);
+        if (!titleMatch && !descMatch) return false;
+      }
 
-  const totalPages = metaGalleryActivity?.pagination?.pageCount || 0;
-  const baseImage = configs.BASE_IMAGE || "";
+      // 2. Month Filter
+      if (selectedMonth && selectedMonth !== "all") {
+        if (!item?.createdAt) return false;
+        const itemDate = new Date(item.createdAt);
+        if (isNaN(itemDate.getTime())) return false;
+
+        const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, "0");
+        if (itemMonth !== selectedMonth) return false;
+      }
+
+      return true;
+    });
+  }, [allItems, debouncedSearchValue, selectedMonth]);
+
+  // Client-side pagination
+  const totalItems = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+
+  // Reset to page 1 whenever search query or month filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchValue, selectedMonth, itemsPerPage]);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedItems = React.useMemo(() => {
+    return filteredItems.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredItems, startIndex, itemsPerPage]);
 
   return (
-    <section className="container px-3 py-6 sm:px-4 sm:py-10 lg:px-6 lg:py-12">
+    <section className="container max-w-7xl mx-auto px-4 py-8 sm:py-12">
       <CSearchWrapper
         // Search props
         searchValue={searchValue}
         onSearchChange={setSearchValue}
-        searchPlaceholder="Cari"
+        searchPlaceholder="Cari kegiatan..."
         // Month dropdown props
         selectedMonth={selectedMonth}
         onMonthChange={setSelectedMonth}
@@ -72,10 +87,10 @@ export default function Content() {
         {/* Your gallery content here */}
         <Mapper
           isLoading={isLoadingGalleryActivity}
-          data={respGalleryActivity?.data}
+          data={paginatedItems}
           skeletonCount={itemsPerPage}
-          skeletonClassName="h-[300px] w-full sm:h-[350px]"
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
+          skeletonClassName="h-[220px] w-full sm:h-[300px] rounded-xl sm:rounded-3xl"
+          className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6 lg:grid-cols-3 xl:grid-cols-4"
           render={(item) => {
             const thumbnailUrl =
               typeof item?.thumbnail === "string"
@@ -84,7 +99,7 @@ export default function Content() {
             const imageUrl = getImageUrl(thumbnailUrl);
             return (
               <CardActivity
-                key={item?.id}
+                key={item?.id || item?.documentId}
                 title={item?.title}
                 description={item?.description}
                 image={imageUrl}
@@ -94,22 +109,6 @@ export default function Content() {
             );
           }}
         />
-
-        {/* Debug Info (optional - remove in production) */}
-        {/* <div className="mt-6 p-4 bg-secondary-500/5 rounded-lg text-sm space-y-1">
-          <p>
-            <strong>Search:</strong> {searchValue || "(kosong)"}
-          </p>
-          <p>
-            <strong>Bulan:</strong> {selectedMonth}
-          </p>
-          <p>
-            <strong>Items per page:</strong> {itemsPerPage}
-          </p>
-          <p>
-            <strong>Current page:</strong> {currentPage} / {totalPages}
-          </p>
-        </div> */}
       </CSearchWrapper>
     </section>
   );

@@ -30,14 +30,14 @@ export default function CardActivity({
     : "";
 
   return (
-    <article className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl">
-      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden sm:aspect-square">
-        <div className="absolute left-2.5 top-2.5 z-20 flex min-h-12 min-w-12 flex-col items-center justify-center rounded-xl bg-primary-500 p-2 text-background shadow-lg sm:left-3 sm:top-3 sm:min-h-14 sm:min-w-14 sm:p-3">
-          <span className="text-center text-lg font-bold leading-none sm:text-3xl">
+    <article className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-foreground/10 bg-background shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl">
+      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden">
+        <div className="absolute left-2 top-2 z-20 flex min-h-9 min-w-9 flex-col items-center justify-center rounded-lg bg-primary-500 p-1.5 text-background shadow-md sm:left-3 sm:top-3 sm:min-h-14 sm:min-w-14 sm:p-3 sm:rounded-xl">
+          <span className="text-center text-sm font-bold leading-none sm:text-3xl">
             {dayStr}
           </span>
           {monthYearStr && (
-            <span className="mt-1 text-center text-[9px] font-medium leading-none sm:text-[10px]">
+            <span className="mt-0.5 text-center text-[8px] font-medium leading-none sm:text-[10px] sm:mt-1">
               {monthYearStr}
             </span>
           )}
@@ -51,22 +51,22 @@ export default function CardActivity({
           unoptimized
         />
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-3.5 sm:p-4">
-        <h1 className="line-clamp-2 font-primary text-lg font-bold leading-tight text-foreground sm:text-xl">
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5 sm:gap-2 sm:p-4">
+        <h3 className="line-clamp-2 font-primary text-xs sm:text-base md:text-xl font-bold leading-tight text-foreground">
           {title}
-        </h1>
+        </h3>
         {description && (
-          <p className="line-clamp-2 text-xs text-foreground/70 sm:text-sm leading-relaxed">
+          <p className="line-clamp-2 text-[10px] text-foreground/70 sm:text-sm leading-relaxed">
             {description}
           </p>
         )}
         <Link href={id ? RTR.galleryID(id) : "#"} className="mt-auto pt-1">
           <Button
-            className="group h-auto w-fit p-0 text-sm font-semibold text-primary-500 transition-all hover:text-primary-400 sm:text-base"
+            className="group h-auto w-fit p-0 text-xs font-semibold text-primary-500 transition-all hover:text-primary-400 sm:text-base"
             variant={"ghost"}
           >
             Selengkapnya
-            <ArrowRight className="transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
       </div>

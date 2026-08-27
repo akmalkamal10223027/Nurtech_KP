@@ -503,7 +503,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
     }
   };
 
-  // Upload handler for Header Logo
+  // Upload handler for Header Footer
   const handleUploadHeaderIcon = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -536,50 +536,46 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-100 dark:bg-slate-800/60 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80">
         <button
           onClick={() => setActiveSection('info')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-            activeSection === 'info'
-              ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeSection === 'info'
+            ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
+            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
         >
           <Building2 className="w-4 h-4" />
-          <span>1. Informasi Profil</span>
+          <span> Informasi Profil</span>
         </button>
 
         <button
           onClick={() => setActiveSection('contact')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-            activeSection === 'contact'
-              ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeSection === 'contact'
+            ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
+            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
         >
           <Phone className="w-4 h-4" />
-          <span>2. Kontak & Medsos ({contactList.length})</span>
+          <span>Kontak & Medsos ({contactList.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSection('links')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-            activeSection === 'links'
-              ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeSection === 'links'
+            ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
+            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
         >
           <Compass className="w-4 h-4" />
-          <span>3. Tautan Cepat ({quickLinksList.length})</span>
+          <span>Tautan Cepat ({quickLinksList.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSection('header')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-            activeSection === 'header'
-              ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${activeSection === 'header'
+            ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/60 dark:border-slate-800'
+            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>4. Header Logo & Brand</span>
+          <span>Header Footer </span>
         </button>
       </div>
 
@@ -594,9 +590,6 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
               <Building2 className="w-4 h-4 text-emerald-600" />
               <span>Pengaturan Kolom Informasi</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Bagian ini menampilkan logo/ikon, judul kolom, dan deskripsi singkat sekolah di bagian kiri footer publik.
-            </p>
           </div>
 
           <div>
@@ -615,7 +608,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              Foto / Icon Kolom (Tampil di Samping Teks)
+              Foto / Icon
             </label>
             <div className="flex items-center gap-3">
               {infoForm.iconUrl ? (
@@ -659,9 +652,6 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Deskripsi Singkat Profil Sekolah
               </label>
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-                (Posisi: Di bawah judul & di samping ikon)
-              </span>
             </div>
             <textarea
               rows={4}
@@ -694,9 +684,6 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                 <Phone className="w-4 h-4 text-emerald-600" />
                 <span>Daftar Kontak & Media Sosial Footer ({contactList.length})</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Item kontak ini otomatis tampil di kolom tengah footer dengan ikon bulat berwarna emas
-              </p>
             </div>
 
             <button
@@ -704,7 +691,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-emerald-600/15 cursor-pointer transition-all self-start sm:self-auto"
             >
               <Plus className="w-4 h-4" />
-              <span>Tambah Kontak Baru</span>
+              <span>Tambah</span>
             </button>
           </div>
 
@@ -768,7 +755,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
               <div className="col-span-full p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 text-xs">
                 <Phone className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                 <p className="font-semibold text-slate-700 dark:text-slate-300">Belum ada data kontak</p>
-                <p className="mt-1">Klik tombol 'Tambah Kontak Baru' untuk menambahkan nomor telepon, email, atau sosial media.</p>
+                <p className="mt-1">Klik tombol 'Tambah' untuk menambahkan nomor telepon, email, atau sosial media.</p>
               </div>
             )}
           </div>
@@ -785,7 +772,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           >
             <div className="flex-1">
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Judul Header Kolom Tautan
+                Judul Header
               </label>
               <input
                 type="text"
@@ -814,9 +801,6 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                   <Compass className="w-4 h-4 text-emerald-600" />
                   <span>Daftar Tautan Navigasi Footer ({quickLinksList.length})</span>
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Tautan ini mengarahkan pengunjung ke section penting atau halaman sekolah
-                </p>
               </div>
 
               <button
@@ -834,7 +818,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                     <th className="pb-3 px-3">Nama Tautan</th>
-                    <th className="pb-3 px-3">Target Scroll / URL Link</th>
+                    <th className="pb-3 px-3">URL Link</th>
                     <th className="pb-3 px-3 text-center">Urutan</th>
                     <th className="pb-3 px-3 text-center">Status</th>
                     <th className="pb-3 px-3 text-right">Aksi</th>
@@ -859,11 +843,10 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                         <button
                           type="button"
                           onClick={() => handleToggleLinkActive(item)}
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border cursor-pointer transition-all ${
-                            item.isActive
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
-                              : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
-                          }`}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border cursor-pointer transition-all ${item.isActive
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
+                            : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
+                            }`}
                         >
                           {item.isActive ? 'Aktif' : 'Non-Aktif'}
                         </button>
@@ -902,7 +885,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
         </div>
       )}
 
-      {/* SECTION 4: HEADER LOGO & BRAND */}
+      {/* SECTION 4: HEADER FOOTER & BRAND */}
       {activeSection === 'header' && (
         <form
           onSubmit={handleSaveHeader}
@@ -911,11 +894,8 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-emerald-600" />
-              <span>Pengaturan Logo & Branding Header Footer</span>
+              <span>Header Footer</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Bagian ini tampil di baris atas footer bersama dengan tombol aplikasi Play Store & App Store.
-            </p>
           </div>
 
           <div>
@@ -1008,7 +988,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           >
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                {editingContact ? 'Edit Item Kontak' : 'Tambah Kontak Baru'}
+                {editingContact ? 'Edit Item Kontak' : 'Tambah'}
               </h3>
               <button
                 type="button"
@@ -1039,11 +1019,10 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                       key={p.id}
                       type="button"
                       onClick={() => handleApplyContactPreset(p.id)}
-                      className={`p-2 rounded-xl text-[11px] font-semibold border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                        contactForm.preset === p.id
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700 shadow-xs'
-                          : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-400'
-                      }`}
+                      className={`p-2 rounded-xl text-[11px] font-semibold border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${contactForm.preset === p.id
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-400'
+                        }`}
                     >
                       <IconComp className="w-3.5 h-3.5" />
                       <span>{p.label}</span>
@@ -1055,7 +1034,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Teks Label Kontak (Tampil di Layar)
+                Teks Label Kontak
               </label>
               <input
                 type="text"
@@ -1069,7 +1048,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Tautan / Link Aksi (URL / tel: / mailto:)
+                Tautan / Link Aksi
               </label>
               <input
                 type="text"
@@ -1148,7 +1127,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Target Scroll / URL Link
+                URL Link
               </label>
               <input
                 type="text"
@@ -1177,11 +1156,10 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
               <button
                 type="button"
                 onClick={() => setLinkForm({ ...linkForm, isActive: !linkForm.isActive })}
-                className={`py-1.5 px-3 rounded-xl text-xs font-semibold border flex items-center gap-1.5 cursor-pointer transition-all ${
-                  linkForm.isActive
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
-                    : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
-                }`}
+                className={`py-1.5 px-3 rounded-xl text-xs font-semibold border flex items-center gap-1.5 cursor-pointer transition-all ${linkForm.isActive
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
+                  : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
+                  }`}
               >
                 {linkForm.isActive ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
                 <span>{linkForm.isActive ? 'Aktif' : 'Non-Aktif'}</span>

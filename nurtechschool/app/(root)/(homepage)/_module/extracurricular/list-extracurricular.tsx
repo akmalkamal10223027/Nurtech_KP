@@ -42,21 +42,22 @@ export default function ListExtracurricular() {
               subtitle={item?.description}
               className={cn(
                 hasOddExtracurricular &&
-                  index === (respExtracurricular?.data?.length || 0) - 1 &&
-                  "max-md:mx-auto max-md:w-[calc(50%-0.25rem)] md:w-full",
+                index === (respExtracurricular?.data?.length || 0) - 1 &&
+                "max-md:mx-auto max-md:w-[calc(50%-0.25rem)] md:w-full",
               )}
             />
           )}
         />
       </motion.div>
 
-      <CButton
-        title="Kegiatan Lainnya"
-        size={"default"}
-        animateVariant="secondary"
-        className="place-items-end-safe mt-4 sm:mt-6 w-full sm:w-auto"
-        onClick={handleOpenOverlay}
-      />
+      <div className="mt-1 sm:mt-0">
+        <CButton
+          title="Kegiatan Lainnya"
+          size={"default"}
+          animateVariant="secondary"
+          onClick={handleOpenOverlay}
+        />
+      </div>
     </>
   );
 }

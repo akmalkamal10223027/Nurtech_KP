@@ -107,7 +107,7 @@ export function App() {
           {activeTab === 'app_section' && <AppSectionPage showToast={showToast} />}
           {activeTab === 'schedules' && <SchedulesPage showToast={showToast} />}
           {activeTab === 'articles' && <ArticlesPage showToast={showToast} />}
-          {activeTab === 'categories' && <ArticlesPage showToast={showToast} initialSubTab="categories" />}
+          {activeTab === 'categories' && <ArticlesPage showToast={showToast} initialSubTab="berita" />}
           {activeTab === 'facilities' && <FacilitiesPage showToast={showToast} />}
           {activeTab === 'registration' && <RegistrationPage showToast={showToast} />}
           {activeTab === 'faqs' && <FaqsPage showToast={showToast} />}

@@ -6,7 +6,7 @@ import CHeaderHero from "@/components/custom/c-header-hero";
 export default function Hero() {
   return (
     <section
-      className="relative w-full h-[400px] lg:h-[400px] overflow-hidden"
+      className="relative w-full h-[260px] sm:h-[320px] md:h-[360px] lg:h-[400px] overflow-hidden"
       id="home"
     >
       {/* Background Image layer */}

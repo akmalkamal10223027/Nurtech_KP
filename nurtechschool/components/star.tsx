@@ -43,6 +43,7 @@ export default function Star({
       <AnimatePresence>
         {hovered && (
           <motion.div
+            key="star-hover-overlay"
             style={maskStyle}
             className="absolute inset-0 bg-primary-50"
             initial={{ scale: 0 }}
