@@ -29,8 +29,13 @@ export default function FAQ() {
             height={209}
             className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
           />
-          <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-cover bg-center bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
-            <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12 w-full">
+          <div className="z-20 w-full rounded-2xl bg-[#004937] relative overflow-hidden px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
+            <div
+              className="absolute -inset-4 bg-[url('/images/icon/registration-card.svg')] bg-center bg-no-repeat pointer-events-none"
+              style={{ backgroundSize: '150% 150%' }}
+              aria-hidden="true"
+            />
+            <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12 w-full z-10">
               <div className="size-12 sm:size-[75px] rounded-full bg-white/10 animate-pulse" />
               <div className="h-8 w-64 rounded-lg bg-white/10 animate-pulse" />
               <div className="h-4 w-80 rounded-lg bg-white/10 animate-pulse" />
@@ -73,17 +78,24 @@ export default function FAQ() {
           height={209}
           className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
         />
-        <div className="z-20 w-full rounded-2xl bg-[#004937] bg-[url('/images/icon/registration-card.svg')] bg-cover bg-center bg-no-repeat px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
+        <div className="z-20 w-full rounded-2xl bg-[#004937] relative overflow-hidden px-4 py-10 text-white shadow-xl sm:px-8 md:px-12 lg:px-16 flex flex-col items-center">
+          {/* Full Card Background Pattern - Enlarged (150% 150%) */}
+          <div
+            className="absolute -inset-4 bg-[url('/images/icon/registration-card.svg')] bg-center bg-no-repeat pointer-events-none"
+            style={{ backgroundSize: '150% 150%' }}
+            aria-hidden="true"
+          />
+
           {/* Header */}
-          <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12">
+          <div className="relative z-10 flex flex-col items-center justify-center gap-3 sm:gap-5 mb-10 sm:mb-12">
             <Image
               src={Star}
               alt="Star"
               width={75}
               height={75}
-              className="z-20 size-12 sm:size-[75px]"
+              className="size-12 sm:size-[75px]"
             />
-            <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold font-serif z-20 leading-tight">
+            <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold font-serif leading-tight">
               Pertanyaan Umum (FAQ)
             </h2>
             <p className="max-w-2xl px-4 text-center text-sm sm:text-base md:text-lg font-medium leading-relaxed text-white/80">
@@ -93,7 +105,7 @@ export default function FAQ() {
           </div>
 
           {/* FAQ Items - Accordion */}
-          <div className="flex flex-col gap-4 w-full">
+          <div className="relative z-10 flex flex-col gap-4 w-full">
             {faqs.map((faq) => {
               const isOpen = openId === faq.id;
 

@@ -28,6 +28,7 @@ interface SearchWrapperProps {
   currentPage?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
+  isLoading?: boolean;
 
   // Children content (will be rendered between controls and pagination)
   children?: React.ReactNode;
@@ -70,8 +71,10 @@ export default function CSearchWrapper({
   className,
   numberLabel2,
   noEntry,
+  isLoading = false,
 }: SearchWrapperProps) {
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
 
   const handleNumberIncrement = () => {
     if (numberValue < numberMax && onNumberChange) {
@@ -85,11 +88,26 @@ export default function CSearchWrapper({
     }
   };
 
+  const handlePageChangeInternal = (page: number) => {
+    if (page === currentPage) return;
+    setPageLoading(true);
+    onPageChange?.(page);
+
+    const el = document.getElementById("search-wrapper-top");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    setTimeout(() => {
+      setPageLoading(false);
+    }, 600);
+  };
+
   const selectedMonthLabel =
     months.find((m) => m.value === selectedMonth)?.label || "Pilih Bulan";
 
   return (
-    <div className={cn("w-full space-y-5 sm:space-y-6", className)}>
+    <div id="search-wrapper-top" className={cn("w-full space-y-5 sm:space-y-6 scroll-mt-24", className)}>
       {/* Top Controls */}
       <div className="flex flex-col gap-2.5 rounded-xl sm:rounded-2xl border border-foreground/10 bg-background p-2.5 sm:p-3.5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         {/* Search Input */}
@@ -107,47 +125,49 @@ export default function CSearchWrapper({
         {/* Filters Row: Month Dropdown + Entry Count */}
         <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
           {/* Month Dropdown */}
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
-              className="flex h-8.5 sm:h-9 w-auto items-center justify-between gap-1.5 rounded-lg border border-border bg-secondary-500 px-2.5 text-left text-xs text-background font-semibold transition-all hover:bg-secondary-600 focus:outline-none focus:ring-1.5 focus:ring-secondary-500/30"
-            >
-              <span>{selectedMonthLabel}</span>
-              <ChevronDownIcon
-                className={cn(
-                  "w-3 h-3 text-background transition-transform shrink-0",
-                  isMonthDropdownOpen && "rotate-180",
-                )}
-              />
-            </button>
-
-            {isMonthDropdownOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setIsMonthDropdownOpen(false)}
+          {onMonthChange && (
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
+                className="flex h-8.5 sm:h-9 w-auto items-center justify-between gap-1.5 rounded-lg border border-border bg-secondary-500 px-2.5 text-left text-xs text-background font-semibold transition-all hover:bg-secondary-600 focus:outline-none focus:ring-1.5 focus:ring-secondary-500/30"
+              >
+                <span>{selectedMonthLabel}</span>
+                <ChevronDownIcon
+                  className={cn(
+                    "w-3 h-3 text-background transition-transform shrink-0",
+                    isMonthDropdownOpen && "rotate-180",
+                  )}
                 />
-                <div className="absolute left-0 top-full z-50 mt-1 max-h-[240px] w-auto min-w-[140px] overflow-y-auto rounded-lg border border-border bg-background shadow-lg">
-                  {months.map((month) => (
-                    <button
-                      key={month.value}
-                      onClick={() => {
-                        onMonthChange?.(month.value);
-                        setIsMonthDropdownOpen(false);
-                      }}
-                      className={cn(
-                        "w-full px-3 py-1.5 text-xs text-left hover:bg-primary-500/10 transition-colors",
-                        selectedMonth === month.value &&
-                          "bg-primary-500/20 text-primary-500 font-semibold",
-                      )}
-                    >
-                      {month.label}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+              </button>
+
+              {isMonthDropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setIsMonthDropdownOpen(false)}
+                  />
+                  <div className="absolute left-0 top-full z-50 mt-1 max-h-[240px] w-auto min-w-[140px] overflow-y-auto rounded-lg border border-border bg-background shadow-lg">
+                    {months.map((month) => (
+                      <button
+                        key={month.value}
+                        onClick={() => {
+                          onMonthChange?.(month.value);
+                          setIsMonthDropdownOpen(false);
+                        }}
+                        className={cn(
+                          "w-full px-3 py-1.5 text-xs text-left hover:bg-primary-500/10 transition-colors",
+                          selectedMonth === month.value &&
+                            "bg-primary-500/20 text-primary-500 font-semibold",
+                        )}
+                      >
+                        {month.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Entry Counter */}
           {!noEntry && (
@@ -166,7 +186,7 @@ export default function CSearchWrapper({
                   <button
                     onClick={handleNumberIncrement}
                     disabled={numberValue >= numberMax}
-                    className="flex items-center justify-center p-0.5"
+                    className="flex items-center justify-center p-0.5 cursor-pointer"
                   >
                     <ChevronDownOutlineIcon
                       width={11}
@@ -182,7 +202,7 @@ export default function CSearchWrapper({
                     onClick={handleNumberDecrement}
                     disabled={numberValue <= numberMin}
                     aria-label="Decrement"
-                    className="flex items-center justify-center p-0.5"
+                    className="flex items-center justify-center p-0.5 cursor-pointer"
                   >
                     <ChevronDownOutlineIcon
                       width={11}
@@ -204,15 +224,24 @@ export default function CSearchWrapper({
         </div>
       </div>
 
-      {/* Content Area */}
-      {children && <div className="w-full">{children}</div>}
+      {/* Content Area with Loading Spinner State */}
+      {pageLoading || isLoading ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-3 bg-secondary-50/50 dark:bg-slate-800/40 rounded-2xl border border-secondary-500/10 animate-in fade-in duration-300 my-4">
+          <div className="w-9 h-9 border-3 border-secondary-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-bold text-secondary-600 dark:text-secondary-400 tracking-wide">
+            Memuat data...
+          </p>
+        </div>
+      ) : (
+        children && <div className="w-full">{children}</div>
+      )}
 
       {/* Bottom Pagination */}
       {totalPages > 1 && (
         <CPagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={onPageChange || (() => {})}
+          onPageChange={handlePageChangeInternal}
           className="pt-4"
         />
       )}

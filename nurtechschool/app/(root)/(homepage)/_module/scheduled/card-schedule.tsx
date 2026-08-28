@@ -25,8 +25,8 @@ export default function CardSchedule({
     <div
       className={cn(
         "flex relative flex-col group w-full aspect-square",
-        "p-4 sm:p-6 md:p-8",
-        "items-center justify-center text-center gap-2 sm:gap-3",
+        "p-3 sm:p-6 md:p-8",
+        "items-center justify-center text-center gap-1.5 sm:gap-3",
         "bg-primary-50 transition-colors duration-400",
         isActive && "bg-primary-500",
       )}
@@ -43,7 +43,7 @@ export default function CardSchedule({
       <h1
         className={cn(
           "font-primary font-bold z-10 transition-all duration-400 line-clamp-2",
-          "text-xs sm:text-sm md:text-base leading-snug",
+          "text-[9.5px] sm:text-sm md:text-base leading-snug",
           "text-primary-950 group-hover:text-background",
           isActive && "text-background",
         )}
@@ -53,7 +53,7 @@ export default function CardSchedule({
       <p
         className={cn(
           "font-medium z-10 transition-all duration-400 line-clamp-1",
-          "text-[10px] sm:text-xs md:text-sm",
+          "text-[8px] sm:text-xs md:text-sm",
           "text-primary-800 group-hover:text-background",
           isActive && "text-background",
         )}

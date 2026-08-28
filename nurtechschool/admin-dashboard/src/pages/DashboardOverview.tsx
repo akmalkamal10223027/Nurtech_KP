@@ -1,191 +1,182 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Newspaper,
-  Image,
-  BookOpen,
-  Building2,
-  Images,
-  HelpCircle,
-  TrendingUp,
-  Clock,
-  Plus,
-  ArrowUpRight,
-  Sparkles,
-  Settings,
-  ArrowRight,
-  FileText,
-  BarChart2,
-  PieChart,
-  Layers,
-  CheckCircle2
+  Eye,
+  UserCheck,
+  Download,
+  MessageSquare,
+  RefreshCw,
+  Sparkles
 } from 'lucide-react';
-import { api, UPLOAD_BASE } from '../api';
-import { IArticle } from '../types';
+import { api } from '../api';
 
 export interface DashboardOverviewProps {
   setActiveTab: (tab: string) => void;
 }
 
-export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveTab }) => {
-  const [stats, setStats] = useState<{ counts: Record<string, number>; recentArticles: IArticle[] } | null>(null);
+export const DashboardOverview: React.FC<DashboardOverviewProps> = () => {
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeChartMode, setActiveChartMode] = useState<'bar' | 'donut' | 'breakdown'>('bar');
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [period, setPeriod] = useState<'today' | '7d' | '30d' | 'all'>('7d');
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    fetchAnalytics(period, true);
 
-  const fetchStats = async () => {
+    const interval = setInterval(() => {
+      fetchAnalytics(period, false);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [period]);
+
+  const fetchAnalytics = async (p: string, showLoading = false) => {
     try {
-      setLoading(true);
-      const data = await api.getStats();
-      setStats(data);
+      if (showLoading) setLoading(true);
+      const data = await api.getAnalyticsSummary(p);
+      setAnalytics(data);
     } catch (err) {
-      console.error('Failed to fetch stats:', err);
+      console.error('Failed to fetch analytics:', err);
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   };
 
-  const getFullImageUrl = (url?: string) => {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    return `${UPLOAD_BASE}${url}`;
-  };
-
-  const statCards = [
-    { title: 'Banner Homepage', count: stats?.counts?.banners ?? 0, icon: Image, color: 'from-amber-500 to-orange-600', tab: 'banners', subtitle: 'Slider Hero Utama' },
-    { title: 'Galeri Dokumentasi', count: stats?.counts?.galleries ?? 0, icon: Images, color: 'from-rose-500 to-red-600', tab: 'gallery', subtitle: 'Album & Foto Kegiatan' },
-    { title: 'Program & Ekskul', count: (stats?.counts?.programs ?? 0) + (stats?.counts?.extracurriculars ?? 0), icon: BookOpen, color: 'from-purple-500 to-indigo-600', tab: 'programs', subtitle: 'Studi & Pengembangan' },
-    { title: 'Total Berita / Artikel', count: stats?.counts?.articles ?? 0, icon: Newspaper, color: 'from-emerald-500 to-teal-600', tab: 'articles', subtitle: 'Kabar & Publikasi' },
-    { title: 'Aktivitas & Rutinitas', count: stats?.counts?.schedules ?? 0, icon: Clock, color: 'from-indigo-500 to-blue-600', tab: 'schedules', subtitle: 'Jadwal Agenda Harian' },
-    { title: 'Fasilitas & Prestasi', count: (stats?.counts?.facilities ?? 0) + (stats?.counts?.achievements ?? 0), icon: Building2, color: 'from-cyan-500 to-blue-600', tab: 'facilities', subtitle: 'Sarana & Rekam Jejak' },
-    { title: 'Tanya Jawab (FAQ)', count: stats?.counts?.faqs ?? 0, icon: HelpCircle, color: 'from-sky-500 to-teal-600', tab: 'faqs', subtitle: 'Informasi Pendaftaran' }
-  ];
-
-  const chartCategories = [
-    { key: 'articles', label: 'Berita & Artikel', count: stats?.counts?.articles ?? 0, color: '#10b981', bgGradient: 'from-emerald-500 to-teal-600', tab: 'articles' },
-    { key: 'galleries', label: 'Galeri Foto', count: stats?.counts?.galleries ?? 0, color: '#f43f5e', bgGradient: 'from-rose-500 to-red-600', tab: 'gallery' },
-    { key: 'programs', label: 'Program & Ekskul', count: (stats?.counts?.programs ?? 0) + (stats?.counts?.extracurriculars ?? 0), color: '#a855f7', bgGradient: 'from-purple-500 to-indigo-600', tab: 'programs' },
-    { key: 'facilities', label: 'Fasilitas & Prestasi', count: (stats?.counts?.facilities ?? 0) + (stats?.counts?.achievements ?? 0), color: '#06b6d4', bgGradient: 'from-cyan-500 to-blue-600', tab: 'facilities' },
-    { key: 'banners', label: 'Banner Homepage', count: stats?.counts?.banners ?? 0, color: '#f59e0b', bgGradient: 'from-amber-500 to-orange-600', tab: 'banners' },
-    { key: 'schedules', label: 'Agenda & Rutinitas', count: stats?.counts?.schedules ?? 0, color: '#6366f1', bgGradient: 'from-indigo-500 to-blue-600', tab: 'schedules' },
-    { key: 'faqs', label: 'Pertanyaan FAQ', count: stats?.counts?.faqs ?? 0, color: '#0ea5e9', bgGradient: 'from-sky-500 to-teal-600', tab: 'faqs' }
-  ];
-
-  const totalContentItems = chartCategories.reduce((sum, item) => sum + item.count, 0);
-  const maxCount = Math.max(...chartCategories.map(c => c.count), 1);
-
-  const quickActions = [
-    { title: 'Tulis Artikel Baru', desc: 'Publikasikan berita sekolah', icon: Plus, tab: 'articles', color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' },
-    { title: 'Kelola Banner Hero', desc: 'Atur slider & CTA halaman depan', icon: Image, tab: 'banners', color: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' },
-    { title: 'Tambah Galeri Foto', desc: 'Unggah momen kegiatan siswa', icon: Images, tab: 'gallery', color: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100' },
-    { title: 'Program & Ekskul', desc: 'Atur program keahlian & kegiatan', icon: BookOpen, tab: 'programs', color: 'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100' },
-    { title: 'Fasilitas & Prestasi', desc: 'Kelola sarana & jejak juara', icon: Building2, tab: 'facilities', color: 'bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100' },
-    { title: 'Pengaturan Sekolah', desc: 'Profil, visi misi, & kontak', icon: Settings, tab: 'settings', color: 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200' }
-  ];
-
-  // Helper for Donut Chart SVG segments
-  const renderDonutSegments = () => {
-    const radius = 40;
-    const circumference = 2 * Math.PI * radius;
-    let accumulatedOffset = 0;
-
-    if (totalContentItems === 0) {
-      return (
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          fill="transparent"
-          stroke="#e2e8f0"
-          strokeWidth="14"
-        />
-      );
-    }
-
-    return chartCategories.map((item) => {
-      const percentage = item.count / totalContentItems;
-      const strokeDasharray = `${percentage * circumference} ${circumference}`;
-      const strokeDashoffset = -accumulatedOffset;
-      accumulatedOffset += percentage * circumference;
-
-      const isHovered = hoveredCategory === item.key;
-
-      return (
-        <circle
-          key={item.key}
-          cx="50"
-          cy="50"
-          r={radius}
-          fill="transparent"
-          stroke={item.color}
-          strokeWidth={isHovered ? 17 : 14}
-          strokeDasharray={strokeDasharray}
-          strokeDashoffset={strokeDashoffset}
-          onMouseEnter={() => setHoveredCategory(item.key)}
-          onMouseLeave={() => setHoveredCategory(null)}
-          className="transition-all duration-300 cursor-pointer"
-          style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
-        />
-      );
-    });
+  const totals = analytics?.totals || {
+    allTime: { pageViews: 0, registerClicks: 0, downloadClicks: 0, whatsappClicks: 0 },
+    period: { pageViews: 0, registerClicks: 0, downloadClicks: 0, whatsappClicks: 0 }
   };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Welcome Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-800 p-8 text-white shadow-xl border border-emerald-500/30 flex flex-col items-center justify-center text-center">
-        <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight text-center">
-            Selamat Datang di Pusat Kendali Nurtech School
-          </h1>
-        </div>
+      {/* Top Banner & Header */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-700 via-teal-800 to-slate-900 p-6 sm:p-8 text-white shadow-xl border border-emerald-500/20">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Statistik Aktivitas Pengunjung Web
+            </h1>
+            <p className="text-sm text-emerald-100/80 leading-relaxed">
+              Pantau jumlah calon pendaftar, unduhan brosur, pesan WhatsApp, dan kunjungan halaman web sekolah Nurtech secara akurat.
+            </p>
+          </div>
 
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/10 to-transparent pointer-events-none" />
+          {/* Period Selector Tabs */}
+          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-950/40 backdrop-blur-md border border-white/10 shrink-0">
+            {[
+              { id: 'today', label: 'Hari Ini' },
+              { id: '7d', label: '7 Hari' },
+              { id: '30d', label: '30 Hari' },
+              { id: 'all', label: 'Semua' }
+            ].map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setPeriod(p.id as any)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${period === p.id
+                  ? 'bg-emerald-500 text-white shadow-md'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+                  }`}
+              >
+                {p.label}
+              </button>
+            ))}
+
+            <button
+              onClick={() => fetchAnalytics(period, true)}
+              title="Refresh Data"
+              className="p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-colors ml-1"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Metric Cards Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-emerald-600" />
-            <span>Ringkasan Statistik Konten</span>
-          </h3>
-          <span className="text-xs text-slate-500 font-medium">Data Terkini</span>
+      {/* 4 Key Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Card 1: Page Views */}
+        <div className="glass-card p-5 rounded-2xl border border-slate-200/90 bg-white hover:border-emerald-300 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+              <Eye className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+              Web Visitors
+            </span>
+          </div>
+          <div className="mt-4">
+            <p className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? '...' : totals.period?.pageViews?.toLocaleString() ?? 0}
+            </p>
+            <p className="text-xs font-bold text-slate-700 mt-1">Total Pengunjung Web</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Semua waktu: <span className="font-semibold text-slate-600">{totals.allTime?.pageViews?.toLocaleString() ?? 0}</span>
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4.5">
-          {statCards.map((card, idx) => {
-            const Icon = card.icon;
-            return (
-              <div
-                key={idx}
-                onClick={() => setActiveTab(card.tab)}
-                className="glass-card p-5 rounded-2xl border border-slate-200/90 bg-white hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer group"
-              >
-                <div className="flex items-center justify-between">
-                  <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${card.color} flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:bg-emerald-50 group-hover:border-emerald-200 transition-colors">
-                    <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <p className="text-2xl font-black text-slate-900 tracking-tight">
-                    {loading ? '...' : card.count}
-                  </p>
-                  <p className="text-xs font-bold text-slate-800 mt-0.5">{card.title}</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{card.subtitle}</p>
-                </div>
-              </div>
-            );
-          })}
+        {/* Card 2: Klik Daftar Sekarang */}
+        <div className="glass-card p-5 rounded-2xl border border-slate-200/90 bg-white hover:border-amber-300 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
+              <UserCheck className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">
+              Calon Pendaftar
+            </span>
+          </div>
+          <div className="mt-4">
+            <p className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? '...' : totals.period?.registerClicks?.toLocaleString() ?? 0}
+            </p>
+            <p className="text-xs font-bold text-slate-700 mt-1">Klik "Daftar Sekarang"</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Semua waktu: <span className="font-semibold text-slate-600">{totals.allTime?.registerClicks?.toLocaleString() ?? 0}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Card 3: Klik Download App */}
+        <div className="glass-card p-5 rounded-2xl border border-slate-200/90 bg-white hover:border-indigo-300 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+              <Download className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              Unduh App
+            </span>
+          </div>
+          <div className="mt-4">
+            <p className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? '...' : totals.period?.downloadClicks?.toLocaleString() ?? 0}
+            </p>
+            <p className="text-xs font-bold text-slate-700 mt-1">Klik "Download App"</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Semua waktu: <span className="font-semibold text-slate-600">{totals.allTime?.downloadClicks?.toLocaleString() ?? 0}</span>
+            </p>
+          </div>
+        </div>
+
+
+        {/* Card 4: Klik WhatsApp */}
+        <div className="glass-card p-5 rounded-2xl border border-slate-200/90 bg-white hover:border-rose-300 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-rose-500 to-teal-600 flex items-center justify-center text-white shadow-md shadow-rose-500/20">
+              <MessageSquare className="w-6 h-6" />
+            </div>
+            <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-100">
+              Pesan & Kontak
+            </span>
+          </div>
+          <div className="mt-4">
+            <p className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? '...' : totals.period?.whatsappClicks?.toLocaleString() ?? 0}
+            </p>
+            <p className="text-xs font-bold text-slate-700 mt-1">Klik "Hubungi WhatsApp"</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Semua waktu: <span className="font-semibold text-slate-600">{totals.allTime?.whatsappClicks?.toLocaleString() ?? 0}</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
-

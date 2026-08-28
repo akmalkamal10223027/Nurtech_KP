@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { UPLOAD_BASE } from '../api';
 
 export interface HeaderProps {
   title: string;
@@ -37,6 +38,14 @@ export const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
     window.dispatchEvent(new Event('admin_theme_changed'));
   };
 
+  const avatarSrc = user?.avatar
+    ? user.avatar.startsWith('http')
+      ? user.avatar
+      : user.avatar.startsWith('/')
+        ? `${UPLOAD_BASE}${user.avatar}`
+        : `${UPLOAD_BASE}/${user.avatar}`
+    : null;
+
   return (
     <header className="h-16 px-8 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border-b border-slate-200/90 dark:border-slate-800/90 flex items-center justify-between sticky top-0 z-30 transition-colors">
       <div>
@@ -62,8 +71,14 @@ export const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
 
         {/* User profile pill */}
         <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800">
-          <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-            {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+          <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-semibold text-xs shadow-sm overflow-hidden shrink-0">
+            {avatarSrc ? (
+              <img src={avatarSrc} alt={user?.name || 'Avatar'} className="w-full h-full object-cover" />
+            ) : user?.name ? (
+              user.name.charAt(0).toUpperCase()
+            ) : (
+              <User className="w-4 h-4" />
+            )}
           </div>
           <div className="text-left hidden sm:block">
             <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight">{user?.name || 'Admin Nurtech'}</p>

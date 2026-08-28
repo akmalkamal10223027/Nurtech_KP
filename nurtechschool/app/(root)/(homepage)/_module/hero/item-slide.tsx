@@ -9,6 +9,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+import { trackEvent } from "@/lib/analytics";
+
 function HeroButton({ btn, baseImage }: { btn: any; baseImage?: string }) {
   const [hovered, setHovered] = useState(false);
 
@@ -17,13 +19,28 @@ function HeroButton({ btn, baseImage }: { btn: any; baseImage?: string }) {
 
   const iconUrl = typeof btn?.icon === "string" ? btn.icon : btn?.icon?.url;
 
+  const handleHeroClick = () => {
+    const titleLower = (btn?.title || '').toLowerCase();
+    if (titleLower.includes('daftar') || titleLower.includes('register')) {
+      trackEvent('CLICK_REGISTER', { location: `Hero Slide: ${btn?.title}` });
+    } else if (titleLower.includes('download') || titleLower.includes('unduh') || titleLower.includes('app')) {
+      trackEvent('CLICK_DOWNLOAD', { location: `Hero Slide: ${btn?.title}` });
+    } else if (titleLower.includes('wa') || titleLower.includes('whatsapp') || titleLower.includes('hubungi')) {
+      trackEvent('CLICK_WHATSAPP', { location: `Hero Slide: ${btn?.title}` });
+    } else {
+      trackEvent('CLICK_REGISTER', { location: `Hero Slide: ${btn?.title}` });
+    }
+  };
+
   return (
     <Link
       href={btn?.url || "#"}
       className="w-auto shrink-0"
+      onClick={handleHeroClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+
       <CButton
         size="sm"
         className={`w-auto transition-colors duration-300 px-3 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs md:text-sm font-semibold ${

@@ -142,11 +142,11 @@ export default function ItemMiddle({ data }: ItemMiddleProps) {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="font-primary font-bold text-2xl uppercase tracking-wide">
+              <h2 className="font-primary font-bold text-lg sm:text-xl uppercase tracking-wider text-[#F4B942]">
                 {informationData.menu}
               </h2>
               {informationData.data && (
-                <p className="font-normal text-sm leading-relaxed text-background/80 max-w-sm">
+                <p className="font-normal text-xs sm:text-sm leading-relaxed text-background/85 max-w-sm">
                   {informationData.data}
                 </p>
               )}
@@ -156,8 +156,8 @@ export default function ItemMiddle({ data }: ItemMiddleProps) {
       )}
 
       {contactData.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <h2 className="font-primary font-bold text-2xl uppercase tracking-wide">
+        <div className="flex flex-col gap-3.5 sm:gap-4">
+          <h2 className="font-primary font-bold text-lg sm:text-xl uppercase tracking-wider text-[#F4B942]">
             CONTACT INFO
           </h2>
           <div className="flex flex-col gap-3">
@@ -174,11 +174,11 @@ export default function ItemMiddle({ data }: ItemMiddleProps) {
       )}
 
       {linkData && linkSubItems.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <h2 className="font-primary font-bold text-2xl uppercase tracking-wide">
+        <div className="flex flex-col gap-3.5 sm:gap-4">
+          <h2 className="font-primary font-bold text-lg sm:text-xl uppercase tracking-wider text-[#F4B942]">
             {linkData.menu}
           </h2>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5 sm:gap-2">
             {linkSubItems
               .filter((sub: FooterSubMenu) => sub.isActive !== false)
               .slice()
@@ -208,17 +208,20 @@ const ContactItem = ({
   href: string;
 }) => {
   return (
-    <Link href={href || "#"} target="_blank" rel="noopener noreferrer">
-      <div className="flex items-center gap-3 group cursor-pointer">
-        <div className="relative rounded-full shrink-0 w-10 h-10 flex items-center justify-center bg-[#F4B942] group-hover:bg-[#D4A017] transition-colors duration-300">
-          {icon}
-        </div>
-
-        <span className="text-sm group-hover:text-[#F4B942] transition-colors duration-300">
-          {title}
-        </span>
+    <a
+      href={href || "#"}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-3 group cursor-pointer min-w-0"
+    >
+      <div className="relative rounded-full shrink-0 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-[#F4B942] group-hover:bg-[#E9A825] group-hover:scale-105 transition-all duration-300 shadow-sm">
+        {icon}
       </div>
-    </Link>
+
+      <span className="text-xs sm:text-sm text-white/90 group-hover:text-[#F4B942] transition-colors duration-300 break-words leading-snug">
+        {title}
+      </span>
+    </a>
   );
 };
 
@@ -226,15 +229,15 @@ const QuickLinkItem = ({ title, href }: { title: string; href: string }) => {
   return (
     <CLinkScroll
       to={href || "#"}
-      className="flex items-center gap-2 group cursor-pointer py-1"
+      className="flex items-center gap-2.5 group cursor-pointer py-1 text-white/85 hover:text-[#F4B942] transition-all duration-300"
       offset={-100}
     >
       <svg
-        width="8"
-        height="12"
+        width="6"
+        height="10"
         viewBox="0 0 8 12"
         fill="none"
-        className="text-[#F4B942] shrink-0 group-hover:text-[#D4A017] transition-colors duration-300"
+        className="text-[#F4B942] shrink-0 transform group-hover:translate-x-1 transition-transform duration-300"
       >
         <path
           d="M1 1L6 6L1 11"
@@ -245,7 +248,7 @@ const QuickLinkItem = ({ title, href }: { title: string; href: string }) => {
         />
       </svg>
 
-      <span className="text-sm group-hover:text-[#F4B942] transition-colors duration-300">
+      <span className="text-xs sm:text-sm font-medium leading-normal">
         {title}
       </span>
     </CLinkScroll>

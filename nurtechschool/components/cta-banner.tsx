@@ -6,6 +6,8 @@ import { BookArchiveIcon } from "@/lib/icons";
 import { configs } from "@/lib/constants";
 import { handleClick } from "@/lib/utils";
 
+import { trackEvent } from "@/lib/analytics";
+
 export default function CTABanner() {
   const website = configs.WEBSITE_URL;
 
@@ -40,10 +42,14 @@ export default function CTABanner() {
               />
             }
             className="font-semibold"
-            onClick={() => handleClick(website)}
+            onClick={() => {
+              trackEvent('CLICK_REGISTER', { location: 'CTA Banner' });
+              handleClick(website);
+            }}
           />
         )}
       </div>
     </div>
   );
 }
+

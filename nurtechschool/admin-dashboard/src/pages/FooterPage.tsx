@@ -19,7 +19,10 @@ import {
   MessageCircle,
   Compass,
   Building2,
-  Sparkles
+  Sparkles,
+  Search,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { api, UPLOAD_BASE } from '../api';
 
@@ -62,6 +65,16 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
   const [subMenus, setSubMenus] = useState<IFooterSubMenu[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Search & Pagination States
+  const [searchContact, setSearchContact] = useState('');
+  const [contactPage, setContactPage] = useState(1);
+  const [contactItemsPerPage, setContactItemsPerPage] = useState(5);
+
+  const [searchLinks, setSearchLinks] = useState('');
+  const [linksPage, setLinksPage] = useState(1);
+  const [linksItemsPerPage, setLinksItemsPerPage] = useState(5);
+
 
   // Form State: Information Column
   const [infoForm, setInfoForm] = useState({
@@ -677,88 +690,174 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
 
       {/* SECTION 2: KONTAK & MEDIA SOSIAL */}
       {activeSection === 'contact' && (
-        <div className="space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Phone className="w-4 h-4 text-emerald-600" />
-                <span>Daftar Kontak & Media Sosial Footer ({contactList.length})</span>
-              </h3>
+        <div className="space-y-6">
+          {/* Top Action Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1 max-w-md">
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchContact}
+                  onChange={(e) => {
+                    setSearchContact(e.target.value);
+                    setContactPage(1);
+                  }}
+                  placeholder="Cari kontak atau medsos..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200/90 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500 shadow-sm"
+                />
+              </div>
+
+              {/* Items Per Page */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-xs text-slate-500 font-medium hidden sm:inline">Tampil:</span>
+                <select
+                  value={contactItemsPerPage}
+                  onChange={(e) => {
+                    setContactItemsPerPage(Number(e.target.value));
+                    setContactPage(1);
+                  }}
+                  className="px-2.5 py-2 bg-white border border-slate-200/90 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:border-emerald-500 shadow-sm cursor-pointer"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                </select>
+              </div>
             </div>
 
             <button
               onClick={handleOpenCreateContact}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-emerald-600/15 cursor-pointer transition-all self-start sm:self-auto"
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-600/15 cursor-pointer transition-all shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>Tambah</span>
+              <Plus className="w-4 h-4 text-white" />
+              <span>Tambah Medsos</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {contactList.map((contact, idx) => (
-              <div
-                key={contact.id}
-                className="glass-card rounded-2xl p-4 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm flex flex-col justify-between space-y-3 hover:border-emerald-300 transition-all group"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 flex items-center justify-center shrink-0">
-                      {getContactIcon(contact.menu, contact.data)}
+          {/* Table Container */}
+          {(() => {
+            const filteredContacts = contactList.filter(c => {
+              const q = searchContact.toLowerCase();
+              return c.menu.toLowerCase().includes(q) || (c.data || '').toLowerCase().includes(q);
+            });
+            const totalContactPages = Math.max(1, Math.ceil(filteredContacts.length / contactItemsPerPage));
+            const validContactPage = Math.min(contactPage, totalContactPages);
+            const startIdx = (validContactPage - 1) * contactItemsPerPage;
+            const paginatedContacts = filteredContacts.slice(startIdx, startIdx + contactItemsPerPage);
+
+            return (
+              <div className="glass-card rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-sm flex flex-col justify-between">
+                {filteredContacts.length === 0 ? (
+                  <div className="p-12 text-center text-xs text-slate-500">
+                    {searchContact ? 'Tidak ada kontak yang sesuai dengan pencarian.' : 'Belum ada data kontak.'}
+                  </div>
+                ) : (
+                  <div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-slate-50 border-b border-slate-200/90 text-slate-600 uppercase tracking-wider font-semibold">
+                          <tr>
+                            <th className="px-6 py-3.5 w-16">Urutan</th>
+                            <th className="px-6 py-3.5">Ikon</th>
+                            <th className="px-6 py-3.5">Nama / Label Kontak</th>
+                            <th className="px-6 py-3.5">URL Link / Nomor</th>
+                            <th className="px-6 py-3.5 text-right">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {paginatedContacts.map((contact, idx) => (
+                            <tr key={contact.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="px-6 py-4 font-mono font-bold text-slate-600">
+                                <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-[11px]">
+                                  #{contact.position || startIdx + idx + 1}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
+                                  {getContactIcon(contact.menu, contact.data)}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 font-bold text-slate-900">
+                                {contact.menu}
+                              </td>
+                              <td className="px-6 py-4 font-mono text-slate-600 text-[11px]">
+                                {contact.data || '-'}
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <button
+                                    onClick={() => handleOpenEditContact(contact)}
+                                    className="p-2 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                                    title="Sunting Kontak"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteContact(contact.id)}
+                                    className="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                    title="Hapus Kontak"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-emerald-600 transition-colors">
-                        {contact.menu}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate font-mono mt-0.5">
-                        {contact.data || '-'}
-                      </p>
+
+                    {/* Pagination Footer */}
+                    <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                      <div className="text-slate-500 font-medium">
+                        Menampilkan{' '}
+                        <span className="font-bold text-slate-800">
+                          {filteredContacts.length === 0 ? 0 : startIdx + 1} - {Math.min(startIdx + contactItemsPerPage, filteredContacts.length)}
+                        </span>{' '}
+                        dari <span className="font-bold text-slate-800">{filteredContacts.length}</span> kontak
+                      </div>
+
+                      {totalContactPages > 1 && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => setContactPage(validContactPage - 1)}
+                            disabled={validContactPage === 1}
+                            className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+
+                          {Array.from({ length: totalContactPages }, (_, i) => i + 1).map((pageNum) => (
+                            <button
+                              key={pageNum}
+                              onClick={() => setContactPage(pageNum)}
+                              className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
+                                validContactPage === pageNum
+                                  ? 'bg-emerald-600 text-white shadow-sm'
+                                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          ))}
+
+                          <button
+                            onClick={() => setContactPage(validContactPage + 1)}
+                            disabled={validContactPage === totalContactPages}
+                            className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      onClick={() => handleOpenEditContact(contact)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition-colors"
-                      title="Edit Kontak"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteContact(contact.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition-colors"
-                      title="Hapus Kontak"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>Urutan: #{contact.position || idx + 1}</span>
-                  {contact.data && (
-                    <a
-                      href={contact.data}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
-                    >
-                      <span>Uji Tautan</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
+                )}
               </div>
-            ))}
-
-            {contactList.length === 0 && (
-              <div className="col-span-full p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 text-xs">
-                <Phone className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                <p className="font-semibold text-slate-700 dark:text-slate-300">Belum ada data kontak</p>
-                <p className="mt-1">Klik tombol 'Tambah' untuk menambahkan nomor telepon, email, atau sosial media.</p>
-              </div>
-            )}
-          </div>
+            );
+          })()}
         </div>
       )}
 
@@ -768,122 +867,212 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           {/* Quick Links Parent Title Editor */}
           <form
             onSubmit={handleSaveLinkParent}
-            className="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            className="glass-card rounded-2xl p-5 border border-slate-200 bg-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Judul Header
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Judul Header Kolom Footer
               </label>
               <input
                 type="text"
                 value={linkParentForm.menu}
                 onChange={(e) => setLinkParentForm({ ...linkParentForm, menu: e.target.value })}
                 placeholder="Contoh: QUICK LINKS atau TAUTAN CEPAT"
-                className="w-full max-w-md px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-bold uppercase focus:outline-none focus:border-emerald-500"
+                className="w-full max-w-md px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-bold uppercase focus:outline-none focus:border-emerald-500"
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer self-start sm:self-end disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer self-start sm:self-end disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Simpan Judul Kolom</span>
             </button>
           </form>
 
-          {/* Quick Links Sub-Items */}
-          <div className="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Compass className="w-4 h-4 text-emerald-600" />
-                  <span>Daftar Tautan Navigasi Footer ({quickLinksList.length})</span>
-                </h3>
+          {/* Top Action Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1 max-w-md">
+              {/* Search Box */}
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchLinks}
+                  onChange={(e) => {
+                    setSearchLinks(e.target.value);
+                    setLinksPage(1);
+                  }}
+                  placeholder="Cari tautan navigasi..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200/90 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500 shadow-sm"
+                />
               </div>
 
-              <button
-                onClick={() => handleOpenCreateLink()}
-                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-emerald-600/15 cursor-pointer transition-all self-start sm:self-auto"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Tambah Tautan Baru</span>
-              </button>
+              {/* Items Per Page Selector */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-xs text-slate-500 font-medium hidden sm:inline">Tampil:</span>
+                <select
+                  value={linksItemsPerPage}
+                  onChange={(e) => {
+                    setLinksItemsPerPage(Number(e.target.value));
+                    setLinksPage(1);
+                  }}
+                  className="px-2.5 py-2 bg-white border border-slate-200/90 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:border-emerald-500 shadow-sm cursor-pointer"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                </select>
+              </div>
             </div>
 
-            {/* Table of Links */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
-                    <th className="pb-3 px-3">Nama Tautan</th>
-                    <th className="pb-3 px-3">URL Link</th>
-                    <th className="pb-3 px-3 text-center">Urutan</th>
-                    <th className="pb-3 px-3 text-center">Status</th>
-                    <th className="pb-3 px-3 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {quickLinksList.map((item, idx) => (
-                    <tr key={item.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3 px-3 font-bold text-slate-900 dark:text-white">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[#F4B942]">›</span>
-                          <span>{item.menu}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-3 font-mono text-[11px] text-slate-600 dark:text-slate-300">
-                        {item.data || '#'}
-                      </td>
-                      <td className="py-3 px-3 text-center font-bold text-slate-500">
-                        #{item.position || idx + 1}
-                      </td>
-                      <td className="py-3 px-3 text-center">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleLinkActive(item)}
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border cursor-pointer transition-all ${item.isActive
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
-                            : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
-                            }`}
-                        >
-                          {item.isActive ? 'Aktif' : 'Non-Aktif'}
-                        </button>
-                      </td>
-                      <td className="py-3 px-3 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            onClick={() => handleOpenEditLink(item)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition-colors"
-                            title="Edit Tautan"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteLink(item.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition-colors"
-                            title="Hapus Tautan"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {quickLinksList.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center text-slate-500">
-                        Belum ada tautan cepat. Klik tombol 'Tambah Tautan Baru' di atas.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <button
+              onClick={() => handleOpenCreateLink()}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-600/15 cursor-pointer transition-all shrink-0"
+            >
+              <Plus className="w-4 h-4 text-white" />
+              <span>Tambah Tautan Baru</span>
+            </button>
           </div>
+
+          {/* Quick Links Data Table */}
+          {(() => {
+            const filteredLinks = quickLinksList.filter(item => {
+              const q = searchLinks.toLowerCase();
+              return item.menu.toLowerCase().includes(q) || (item.data || '').toLowerCase().includes(q);
+            });
+            const totalLinksPages = Math.max(1, Math.ceil(filteredLinks.length / linksItemsPerPage));
+            const validLinksPage = Math.min(linksPage, totalLinksPages);
+            const startIdx = (validLinksPage - 1) * linksItemsPerPage;
+            const paginatedLinks = filteredLinks.slice(startIdx, startIdx + linksItemsPerPage);
+
+            return (
+              <div className="glass-card rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-sm flex flex-col justify-between">
+                {filteredLinks.length === 0 ? (
+                  <div className="p-12 text-center text-xs text-slate-500">
+                    {searchLinks ? 'Tidak ada tautan yang sesuai dengan pencarian.' : 'Belum ada tautan navigasi.'}
+                  </div>
+                ) : (
+                  <div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-slate-50 border-b border-slate-200/90 text-slate-600 uppercase tracking-wider font-semibold">
+                          <tr>
+                            <th className="px-6 py-3.5 w-16">Urutan</th>
+                            <th className="px-6 py-3.5">Nama Tautan Navigasi</th>
+                            <th className="px-6 py-3.5">URL Target Link</th>
+                            <th className="px-6 py-3.5 text-center">Status Tampil</th>
+                            <th className="px-6 py-3.5 text-right">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {paginatedLinks.map((item, idx) => (
+                            <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="px-6 py-4 font-mono font-bold text-slate-600">
+                                <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-[11px]">
+                                  #{item.position || startIdx + idx + 1}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 font-bold text-slate-900">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-amber-500 font-bold">›</span>
+                                  <span>{item.menu}</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 font-mono text-slate-600 text-[11px]">
+                                {item.data || '#'}
+                              </td>
+                              <td className="px-6 py-4 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleLinkActive(item)}
+                                  className={`px-3 py-1 rounded-full text-[11px] font-semibold border cursor-pointer transition-all ${
+                                    item.isActive
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                      : 'bg-slate-100 text-slate-500 border-slate-200'
+                                  }`}
+                                >
+                                  {item.isActive ? 'Aktif' : 'Non-Aktif'}
+                                </button>
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <button
+                                    onClick={() => handleOpenEditLink(item)}
+                                    className="p-2 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                                    title="Sunting Tautan"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteLink(item.id)}
+                                    className="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                    title="Hapus Tautan"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Pagination Footer */}
+                    <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                      <div className="text-slate-500 font-medium">
+                        Menampilkan{' '}
+                        <span className="font-bold text-slate-800">
+                          {filteredLinks.length === 0 ? 0 : startIdx + 1} - {Math.min(startIdx + linksItemsPerPage, filteredLinks.length)}
+                        </span>{' '}
+                        dari <span className="font-bold text-slate-800">{filteredLinks.length}</span> tautan
+                      </div>
+
+                      {totalLinksPages > 1 && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => setLinksPage(validLinksPage - 1)}
+                            disabled={validLinksPage === 1}
+                            className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+
+                          {Array.from({ length: totalLinksPages }, (_, i) => i + 1).map((pageNum) => (
+                            <button
+                              key={pageNum}
+                              onClick={() => setLinksPage(pageNum)}
+                              className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
+                                validLinksPage === pageNum
+                                  ? 'bg-emerald-600 text-white shadow-sm'
+                                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          ))}
+
+                          <button
+                            onClick={() => setLinksPage(validLinksPage + 1)}
+                            disabled={validLinksPage === totalLinksPages}
+                            className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
+
 
       {/* SECTION 4: HEADER FOOTER & BRAND */}
       {activeSection === 'header' && (
@@ -988,7 +1177,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           >
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                {editingContact ? 'Edit Item Kontak' : 'Tambah'}
+                {editingContact ? 'Edit Item Kontak' : 'Tambah Medsos'}
               </h3>
               <button
                 type="button"
@@ -1084,7 +1273,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
                 disabled={submitting}
                 className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/15 cursor-pointer disabled:opacity-50"
               >
-                {submitting ? 'Menyimpan...' : 'Simpan Kontak'}
+                {submitting ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
           </form>
@@ -1100,7 +1289,7 @@ export const FooterPage: React.FC<FooterPageProps> = ({ showToast }) => {
           >
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                {editingLink ? 'Edit Tautan Cepat' : 'Tambah Tautan Cepat'}
+                {editingLink ? 'Edit Tautan Cepat' : 'Tambah Tautan '}
               </h3>
               <button
                 type="button"

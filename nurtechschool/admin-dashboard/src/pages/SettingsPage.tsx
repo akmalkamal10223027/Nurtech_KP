@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Sun, Moon, Monitor, User, Save, ShieldCheck, Check, Eye, EyeOff, Image as ImageIcon, Upload, RefreshCw } from 'lucide-react';
-import { api, UPLOAD_BASE } from '../api';
+import { Lock, User, Save, ShieldCheck, Eye, EyeOff, Image as ImageIcon, Upload } from 'lucide-react';
+import { api, UPLOAD_BASE, setUser } from '../api';
 
 export interface SettingsPageProps {
   showToast: (msg: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'password' | 'theme' | 'logo' | 'profile'>('password');
+  const [activeSubTab, setActiveSubTab] = useState<'password' | 'logo' | 'profile'>('password');
   const [loading, setLoading] = useState(false);
 
   // Password state
@@ -19,11 +19,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
   const [showCurrentPass, setShowCurrentPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [passLoading, setPassLoading] = useState(false);
-
-  // Theme state
-  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system'>(() => {
-    return (localStorage.getItem('admin_theme') as 'light' | 'dark' | 'system') || 'light';
-  });
 
   // Logo state
   const [logoUrl, setLogoUrl] = useState<string>(() => {
@@ -39,6 +34,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     role: 'Administrator'
   });
   const [profileLoading, setProfileLoading] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     fetchInitialData();
@@ -62,27 +58,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Apply Theme Mode
-  const applyTheme = (mode: 'light' | 'dark' | 'system') => {
-    setThemeMode(mode);
-    localStorage.setItem('admin_theme', mode);
-
-    let isDark = false;
-    if (mode === 'dark') {
-      isDark = true;
-    } else if (mode === 'system') {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    window.dispatchEvent(new Event('admin_theme_changed'));
-    showToast(`Mode tampilan diubah ke ${mode === 'dark' ? 'Mode Gelap' : mode === 'light' ? 'Mode Terang' : 'Sistem'}`, 'success');
   };
 
   // Change Password
@@ -125,7 +100,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
         setLogoUrl(dbLogo);
         localStorage.setItem('admin_logo', dbLogo);
       }
-    }).catch(() => {});
+    }).catch(() => { });
   }, []);
 
   // Logo Upload
@@ -165,15 +140,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     }
   };
 
-  const handleResetLogo = async () => {
+  // Avatar Upload
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     try {
-      await api.updateGlobal({ logoUrl: null });
-      localStorage.removeItem('admin_logo');
-      setLogoUrl('');
-      window.dispatchEvent(new Event('admin_logo_changed'));
-      showToast('Logo dashboard direset ke tampilan ikon standar!', 'info');
+      setUploadingAvatar(true);
+      const url = await api.uploadFile(file);
+      if (url) {
+        setProfile((prev) => ({ ...prev, avatar: url }));
+        showToast('Foto avatar berhasil diunggah! Klik "Simpan Profil Admin" untuk menerapkan.', 'info');
+      }
     } catch (err: any) {
-      showToast(err.message || 'Gagal mereset logo di database', 'error');
+      showToast(err.message || 'Gagal mengunggah foto avatar', 'error');
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -182,10 +164,18 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
     e.preventDefault();
     try {
       setProfileLoading(true);
-      await api.updateProfile(profile);
+      const res = await api.updateMe({
+        name: profile.name,
+        email: profile.email,
+        avatar: profile.avatar
+      });
+      if (res?.user) {
+        setUser(res.user);
+      }
+      await api.updateProfile(profile).catch(() => { });
       showToast('Profil admin berhasil diperbarui!', 'success');
     } catch (err: any) {
-      showToast(err.message || 'Gagal menyegarkan profil', 'error');
+      showToast(err.message || 'Gagal memperbarui profil', 'error');
     } finally {
       setProfileLoading(false);
     }
@@ -197,41 +187,35 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
       : `${UPLOAD_BASE}${logoUrl}`
     : null;
 
+  const previewAvatarSrc = profile.avatar
+    ? profile.avatar.startsWith('http')
+      ? profile.avatar
+      : profile.avatar.startsWith('/')
+        ? `${UPLOAD_BASE}${profile.avatar}`
+        : `${UPLOAD_BASE}/${profile.avatar}`
+    : null;
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Sub-Tab Navigation */}
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
         <button
           onClick={() => setActiveSubTab('password')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-            activeSubTab === 'password'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${activeSubTab === 'password'
+            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
         >
           <Lock className="w-4 h-4" />
           <span>Ubah Sandi</span>
         </button>
 
         <button
-          onClick={() => setActiveSubTab('theme')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-            activeSubTab === 'theme'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Sun className="w-4 h-4" />
-          <span>Mode Gelap / Terang</span>
-        </button>
-
-        <button
           onClick={() => setActiveSubTab('logo')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-            activeSubTab === 'logo'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${activeSubTab === 'logo'
+            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
         >
           <ImageIcon className="w-4 h-4" />
           <span>Ganti Logo Admin</span>
@@ -239,11 +223,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
 
         <button
           onClick={() => setActiveSubTab('profile')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-            activeSubTab === 'profile'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${activeSubTab === 'profile'
+            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
         >
           <User className="w-4 h-4" />
           <span>Profil Admin</span>
@@ -326,88 +309,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
         </form>
       )}
 
-      {/* Tab 2: Theme Mode */}
-      {activeSubTab === 'theme' && (
-        <div className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 max-w-2xl shadow-sm">
-          <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-            <Sun className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Mode Tampilan Antarmuka</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Pilih tema preferensi untuk panel admin Anda</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <div
-              onClick={() => applyTheme('light')}
-              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
-                themeMode === 'light'
-                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
-              }`}
-            >
-              {themeMode === 'light' && (
-                <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                  <Check className="w-3 h-3" />
-                </span>
-              )}
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 flex items-center justify-center shadow-xs">
-                <Sun className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Terang</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tampilan bersih dengan latar cerah</p>
-              </div>
-            </div>
-
-            <div
-              onClick={() => applyTheme('dark')}
-              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
-                themeMode === 'dark'
-                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
-              }`}
-            >
-              {themeMode === 'dark' && (
-                <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                  <Check className="w-3 h-3" />
-                </span>
-              )}
-              <div className="w-12 h-12 rounded-xl bg-slate-800 text-slate-200 dark:bg-slate-950 dark:text-slate-100 flex items-center justify-center shadow-xs">
-                <Moon className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Mode Gelap</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tampilan gelap yang nyaman di mata</p>
-              </div>
-            </div>
-
-            <div
-              onClick={() => applyTheme('system')}
-              className={`relative p-4 rounded-2xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all ${
-                themeMode === 'system'
-                  ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
-                  : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50'
-              }`}
-            >
-              {themeMode === 'system' && (
-                <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                  <Check className="w-3 h-3" />
-                </span>
-              )}
-              <div className="w-12 h-12 rounded-xl bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 flex items-center justify-center shadow-xs">
-                <Monitor className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Sistem (Otomatis)</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Mengikuti tema OS Anda</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tab 3: Ganti Logo Admin Dashboard */}
+      {/* Tab 2: Ganti Logo Admin Dashboard */}
       {activeSubTab === 'logo' && (
         <form onSubmit={handleSaveLogo} className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-5 max-w-2xl shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -430,9 +332,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
 
             <div className="space-y-1.5 text-center sm:text-left">
               <h4 className="text-xs font-bold text-slate-900 dark:text-white">Pratinjau Logo Aktif</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Logo ini akan ditampilkan secara langsung pada pojok kiri atas antarmuka Admin Control Center.
-              </p>
+
             </div>
           </div>
 
@@ -456,16 +356,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-            <button
-              type="button"
-              onClick={handleResetLogo}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Reset Standar</span>
-            </button>
-
+          <div className="flex justify-end pt-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="submit"
               className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-600/15"
@@ -479,7 +370,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
 
       {/* Tab 4: Profil Akun Admin */}
       {activeSubTab === 'profile' && (
-        <form onSubmit={handleSaveProfile} className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 max-w-2xl shadow-sm">
+        <form onSubmit={handleSaveProfile} className="glass-card rounded-2xl p-6 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-5 max-w-2xl shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
             <User className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <div>
@@ -487,7 +378,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
               <p className="text-[11px] text-slate-500 dark:text-slate-400">Atur nama pengguna, email kontak, dan foto profil admin</p>
             </div>
           </div>
-
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap Admin</label>
             <input
@@ -513,14 +403,23 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL Avatar Foto Profil</label>
-            <input
-              type="text"
-              value={profile.avatar}
-              onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
-              placeholder="https://images.unsplash.com/... atau URL foto avatar"
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500"
-            />
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              File Avatar Profil
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={profile.avatar}
+                onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
+                placeholder="/uploads/avatar-admin.png atau URL foto avatar"
+                className="flex-1 px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:border-emerald-500 font-mono text-[11px]"
+              />
+              <label className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700 shrink-0">
+                <Upload className="w-3.5 h-3.5" />
+                <span>{uploadingAvatar ? 'Mengunggah...' : 'Upload Avatar'}</span>
+                <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
+              </label>
+            </div>
           </div>
 
           <button

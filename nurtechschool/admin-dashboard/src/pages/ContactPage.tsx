@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PhoneCall, Save, MapPin, Plus, Trash2, Share2 } from 'lucide-react';
+import { PhoneCall, Save, MapPin, Plus, Trash2, Share2, Sparkles } from 'lucide-react';
 import { api } from '../api';
 
 export interface ContactPageProps {
@@ -32,7 +32,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
       const conRes = await api.getContact().catch(() => ({ data: {} }));
       if (conRes?.data) {
         const c0 = conRes.data.contact?.[0] || {};
-        
+
         let parsedPhones: string[] = [];
         if (Array.isArray(c0.phones) && c0.phones.length > 0) {
           parsedPhones = c0.phones.map((p: any) => String(p));
@@ -133,149 +133,162 @@ export const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <form onSubmit={handleSaveContact} className="glass-card rounded-2xl p-6 border border-slate-200/90 bg-white space-y-5 max-w-2xl shadow-sm">
-        <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-          <PhoneCall className="w-5 h-5 text-emerald-600" />
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Kontak & Alamat Utama</h3>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">Alamat Lengkap Sekolah</label>
-          <textarea
-            rows={3}
-            required
-            value={contact.address}
-            onChange={(e) => setContact({ ...contact, address: e.target.value })}
-            placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten..."
-            className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
-          />
-        </div>
-
-        {/* Dynamic Telepon List */}
-        <div className="space-y-2 pt-1 border-t border-slate-100/80">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />
-              <label className="block text-xs font-semibold text-slate-700">
-                Nomor Telepon / WhatsApp Resmi
-              </label>
+    <div className="space-y-5 animate-in fade-in duration-300">
+      <form onSubmit={handleSaveContact} className="space-y-5">
+        {/* 2-Column Side-by-Side Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+          {/* LEFT COLUMN: Alamat & Lokasi Map */}
+          <div className="glass-card rounded-2xl p-5 border border-slate-200/90 bg-white space-y-4 shadow-sm">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <MapPin className="w-4 h-4 text-emerald-600" />
+              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Alamat & Peta Lokasi</h4>
             </div>
-            <button
-              type="button"
-              onClick={addPhoneInput}
-              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/60"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Tambah Nomor Telepon</span>
-            </button>
-          </div>
-          <div className="space-y-2">
-            {contact.phones.map((phoneItem, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  required={idx === 0}
-                  value={phoneItem}
-                  onChange={(e) => handlePhoneChange(idx, e.target.value)}
-                  placeholder={`Nomor Telepon / WA #${idx + 1} (cth: +62 812-3456-7890)`}
-                  className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
-                />
-                {contact.phones.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removePhoneInput(idx)}
-                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
-                    title="Hapus nomor ini"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Dynamic Sosial Media List */}
-        <div className="space-y-2 pt-3 border-t border-slate-100/80">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Share2 className="w-3.5 h-3.5 text-emerald-600" />
-              <label className="block text-xs font-semibold text-slate-700">
-                Sosial Media (Instagram, Facebook, YouTube, TikTok, dll)
-              </label>
-            </div>
-            <button
-              type="button"
-              onClick={addSocialMediaInput}
-              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/60"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Tambah Akun Medsos</span>
-            </button>
-          </div>
-          <div className="space-y-2">
-            {contact.socialMedias.map((socialItem, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={socialItem}
-                  onChange={(e) => handleSocialMediaChange(idx, e.target.value)}
-                  placeholder={`Medsos #${idx + 1} (cth: @nurtechschool atau URL Medsos)`}
-                  className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
-                />
-                {contact.socialMedias.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeSocialMediaInput(idx)}
-                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
-                    title="Hapus sosial media ini"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="pt-3 border-t border-slate-100">
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin className="w-4 h-4 text-emerald-600" />
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Koordinat Peta Lokasi (Google Maps)</h4>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude</label>
-              <input
-                type="number"
-                step="any"
-                value={contact.latitude}
-                onChange={(e) => setContact({ ...contact, latitude: parseFloat(e.target.value) || 0 })}
-                placeholder="-6.175"
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Alamat Lengkap Sekolah</label>
+              <textarea
+                rows={4}
+                required
+                value={contact.address}
+                onChange={(e) => setContact({ ...contact, address: e.target.value })}
+                placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten..."
                 className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude</label>
-              <input
-                type="number"
-                step="any"
-                value={contact.longitude}
-                onChange={(e) => setContact({ ...contact, longitude: parseFloat(e.target.value) || 0 })}
-                placeholder="106.827"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
-              />
+
+            <div className="pt-2 border-t border-slate-100">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Koordinat Peta (Google Maps)</label>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-500 mb-0.5">Latitude</label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={contact.latitude}
+                    onChange={(e) => setContact({ ...contact, latitude: parseFloat(e.target.value) || 0 })}
+                    placeholder="-6.175"
+                    className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-500 mb-0.5">Longitude</label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={contact.longitude}
+                    onChange={(e) => setContact({ ...contact, longitude: parseFloat(e.target.value) || 0 })}
+                    placeholder="106.827"
+                    className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: Telepon & Sosial Media */}
+          <div className="glass-card rounded-2xl p-5 border border-slate-200/90 bg-white space-y-4 shadow-sm">
+            {/* Telepon List */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <div className="flex items-center gap-1.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />
+                  <label className="block text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    Telepon / WhatsApp
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  onClick={addPhoneInput}
+                  className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/60"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Nomor</span>
+                </button>
+              </div>
+
+              <div className="space-y-2 max-h-32 overflow-y-auto pr-1">
+                {contact.phones.map((phoneItem, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      required={idx === 0}
+                      value={phoneItem}
+                      onChange={(e) => handlePhoneChange(idx, e.target.value)}
+                      placeholder={`Nomor WA #${idx + 1} (cth: +62 812-3456-7890)`}
+                      className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
+                    />
+                    {contact.phones.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removePhoneInput(idx)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                        title="Hapus nomor ini"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Sosial Media List */}
+            <div className="space-y-2.5 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <div className="flex items-center gap-1.5">
+                  <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <label className="block text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    Sosial Media
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  onClick={addSocialMediaInput}
+                  className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/60"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Akun</span>
+                </button>
+              </div>
+
+              <div className="space-y-2 max-h-32 overflow-y-auto pr-1">
+                {contact.socialMedias.map((socialItem, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={socialItem}
+                      onChange={(e) => handleSocialMediaChange(idx, e.target.value)}
+                      placeholder={`Medsos #${idx + 1} (cth: @nurtechschool)`}
+                      className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-500"
+                    />
+                    {contact.socialMedias.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeSocialMediaInput(idx)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                        title="Hapus medsos ini"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <button type="submit" className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-600/15">
-          <Save className="w-4 h-4 text-white" />
-          <span>Simpan Kontak & Alamat</span>
-        </button>
+        {/* Bottom Save Action Bar */}
+        <div className="flex items-center justify-end">
+          <button
+            type="submit"
+            className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-emerald-600/15 transition-all"
+          >
+            <Save className="w-4 h-4 text-white" />
+            <span>Simpan Kontak & Alamat</span>
+          </button>
+        </div>
       </form>
     </div>
   );
 };
-

@@ -84,7 +84,7 @@ export function App() {
     faqs: { title: 'Tanya Jawab (FAQ)', subtitle: 'Bantuan FAQ dan pertanyaan seputar sekolah' },
     contact: { title: 'Kontak & Alamat Sekolah', subtitle: 'Alamat fisik, nomor telepon/WA, sosmed, dan peta lokasi' },
     footers: { title: 'Pengaturan Menu Footer', subtitle: 'Kelola menu navigasi bawah, tautan kustom, dan sub-menu footer website' },
-    settings: { title: 'Pengaturan Website & SEO', subtitle: 'Identitas website, nama sekolah, meta title & description' }
+    settings: { title: 'Pengaturan', subtitle: 'Ubah kata sandi, ganti logo dashboard, dan profil akun admin' }
   };
 
   const currentMeta = tabTitles[activeTab] || tabTitles.dashboard;

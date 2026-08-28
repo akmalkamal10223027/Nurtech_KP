@@ -14,7 +14,10 @@ export const getUser = (): IUser | null => {
     return null;
   }
 };
-export const setUser = (user: IUser) => localStorage.setItem('nurtech_admin_user', JSON.stringify(user));
+export const setUser = (user: IUser) => {
+  localStorage.setItem('nurtech_admin_user', JSON.stringify(user));
+  window.dispatchEvent(new Event('admin_user_changed'));
+};
 export const removeUser = () => localStorage.removeItem('nurtech_admin_user');
 
 async function request<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -58,8 +61,18 @@ export const api = {
   }),
   getMe: () => request<IUser>('/auth/me'),
 
-  // Stats
+  // Stats & Analytics
   getStats: () => request<{ counts: Record<string, number>; recentArticles: IArticle[] }>('/dashboard/stats'),
+  getAnalyticsSummary: (period = '7d') => request<{
+    period: string;
+    totals: {
+      allTime: { pageViews: number; registerClicks: number; downloadClicks: number; whatsappClicks: number; appClicks: number };
+      period: { pageViews: number; registerClicks: number; downloadClicks: number; whatsappClicks: number };
+    };
+    dailyTrend: Array<{ date: string; label: string; pageViews: number; registerClicks: number; downloadClicks: number; whatsappClicks: number }>;
+    recentActivities: Array<{ id: number; eventType: string; pagePath: string; ipAddress: string; metadata: any; createdAt: string }>;
+  }>(`/analytics/summary?period=${period}`),
+
 
   // Articles & Categories
   getArticles: (params = '') => request<{ data: IArticle[] }>(`/articles${params}`),

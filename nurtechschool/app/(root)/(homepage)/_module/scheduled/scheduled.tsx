@@ -17,11 +17,11 @@ export default function Scheduled() {
             />
           </div>
 
-          <h1 className="font-primary text-3xl font-bold md:text-4xl">
+          <h1 className="font-primary text-xl sm:text-3xl md:text-4xl font-bold">
             Jadwal Aktivitas
           </h1>
 
-          <p className="mt-2 font-primary text-xl md:text-2xl">
+          <p className="mt-1 sm:mt-2 font-primary text-xs sm:text-base md:text-2xl text-foreground/80">
             Siswa SMP Islam Nurtech
           </p>
         </div>

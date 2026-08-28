@@ -18,6 +18,7 @@ const singleTypeController = require('../controllers/singleTypeController');
 const footerController = require('../controllers/footerController');
 const uploadController = require('../controllers/uploadController');
 const statsController = require('../controllers/dashboardStatsController');
+const analyticsController = require('../controllers/analyticsController');
 
 // --- Auth Routes ---
 router.post('/auth/local', authController.login);
@@ -30,8 +31,13 @@ router.put('/auth/change-password', auth, authController.changePassword);
 router.post('/auth/send-otp', (req, res) => res.json({ message: 'OTP sent successfully' }));
 router.post('/auth/check-otp', (req, res) => res.json({ message: 'OTP verified successfully' }));
 
+// --- Analytics Routes ---
+router.post('/analytics/track', analyticsController.trackEvent);
+router.get('/analytics/summary', analyticsController.getAnalyticsSummary);
+
 // --- Dashboard Stats ---
 router.get('/dashboard/stats', statsController.getDashboardStats);
+
 
 // --- Articles & News ---
 router.get('/articles', articleController.getArticles);

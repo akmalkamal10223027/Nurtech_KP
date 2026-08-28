@@ -7,12 +7,15 @@ import { WhatsappIcon } from "@/lib/image";
 import Image from "next/image";
 import { Download } from "lucide-react";
 
+import { trackEvent } from "@/lib/analytics";
+
 export default function CFloatingButton() {
   const waNumber = configs.WA_NUMBER;
 
   const waUrl = waNumber ? `https://wa.me/${formatPhone(waNumber)}` : null;
 
   const scrollToApp = () => {
+    trackEvent('CLICK_DOWNLOAD', { location: 'Floating Download Button' });
     const el = document.getElementById("app-section");
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -43,6 +46,7 @@ export default function CFloatingButton() {
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent('CLICK_WHATSAPP', { location: 'Floating WhatsApp Button' })}
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           whileHover={{ scale: 1.05 }}
@@ -65,3 +69,4 @@ export default function CFloatingButton() {
     </div>
   );
 }
+

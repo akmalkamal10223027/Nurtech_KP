@@ -34,6 +34,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setLoading(false);
     };
     initAuth();
+
+    const handleUserChange = () => {
+      const updatedUser = getUser();
+      if (updatedUser) {
+        setUserState(updatedUser);
+      }
+    };
+    window.addEventListener('admin_user_changed', handleUserChange);
+    return () => window.removeEventListener('admin_user_changed', handleUserChange);
   }, []);
 
   const login = async (email: string, password: string) => {

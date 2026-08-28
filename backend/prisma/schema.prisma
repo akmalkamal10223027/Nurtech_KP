@@ -275,3 +275,17 @@ model AppSection {
   updatedAt          DateTime @updatedAt
   publishedAt        DateTime @default(now())
 }
+
+model AnalyticsEvent {
+  id        Int      @id @default(autoincrement())
+  eventType String   // 'PAGE_VIEW' | 'CLICK_REGISTER' | 'CLICK_DOWNLOAD' | 'CLICK_WHATSAPP' | 'CLICK_APP'
+  pagePath  String?  // '/' | '/berita' | '/pendaftaran' etc.
+  ipAddress String?
+  userAgent String?  @db.Text
+  metadata  Json?    // details (label, target, etc.)
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+

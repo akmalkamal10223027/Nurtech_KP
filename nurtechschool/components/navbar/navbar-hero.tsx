@@ -16,6 +16,7 @@ import {
 import { MapPin, Download } from "lucide-react";
 import { useContact } from "@/services/queries/landing";
 import { handleClick } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 export default function NavbarHero() {
   const { respContact } = useContact();
@@ -41,10 +42,15 @@ export default function NavbarHero() {
           <div className="flex items-center justify-between w-full">
             {/* Kiri */}
             <div className="flex lg:items-center gap-2 lg:flex-row flex-col">
-              <ListItem
-                title={`Hubungi kami: ${displayPhone}`}
-                icon={<PiWhatsappLogo className="shrink-0" size={18} />}
-              />
+              <div
+                onClick={() => trackEvent('CLICK_WHATSAPP', { location: 'Navbar Phone Header' })}
+                className="cursor-pointer"
+              >
+                <ListItem
+                  title={`Hubungi kami: ${displayPhone}`}
+                  icon={<PiWhatsappLogo className="shrink-0" size={18} />}
+                />
+              </div>
 
               <ListItem
                 title={contact?.address}
@@ -74,6 +80,7 @@ export default function NavbarHero() {
                 <Download className="size-4 text-white group-hover:text-[#0d4f3c] transition-colors duration-300" />
               }
               className="group font-bold whitespace-nowrap !bg-[#0d4f3c] !text-white hover:!bg-white hover:!text-[#0d4f3c] transition-all duration-300 w-full"
+              onClick={() => trackEvent('CLICK_DOWNLOAD', { location: 'Navbar Download App' })}
             >
               DOWNLOAD APP
             </CButton>
@@ -82,9 +89,10 @@ export default function NavbarHero() {
             size={"sm"}
             icon={<BookArchiveIcon fill="#fff" />}
             className="font-bold whitespace-nowrap"
-            onClick={() =>
-              handleClick(process.env.NEXT_PUBLIC_WEBSITE_TO as string)
-            }
+            onClick={() => {
+              trackEvent('CLICK_REGISTER', { location: 'Navbar Hero' });
+              handleClick(process.env.NEXT_PUBLIC_WEBSITE_TO as string);
+            }}
           >
             Daftar Sekarang
           </CButton>
@@ -93,6 +101,7 @@ export default function NavbarHero() {
     </div>
   );
 }
+
 
 const ListItem = ({
   title,

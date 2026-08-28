@@ -12,27 +12,63 @@ import Fee from "./fee/fee";
 import FAQ from "./faq/faq";
 import Contact from "./contact/contact";
 import News from "./news";
+import CScrollLazySection from "@/components/custom/c-scroll-lazy-section";
 
 export default function HomePage() {
   return (
     <div>
       <Hero />
-      <div className="flex flex-col gap-40">
-        <div className="container flex flex-col gap-40 overflow-hidden pb-16">
-          <About />
-          <Activity />
-          <Program />
-          <AppSection />
-          <Scheduled />
-          <Extracurricular />
-          <News />
-          <Facility />
-          <Registration />
+      <div className="flex flex-col gap-24 sm:gap-32">
+        <div className="container flex flex-col gap-24 sm:gap-32 overflow-hidden pb-16">
+          <CScrollLazySection loaderTitle="Memuat Profil Sekolah..." delayMs={800}>
+            <About />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Galeri Kegiatan..." delayMs={900}>
+            <Activity />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Program Unggulan..." delayMs={800}>
+            <Program />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Aplikasi Boarding School..." delayMs={900}>
+            <AppSection />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Aktivitas & Rutinitas..." delayMs={800}>
+            <Scheduled />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Ekstrakurikuler..." delayMs={800}>
+            <Extracurricular />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Berita & Artikel Terbaru..." delayMs={900}>
+            <News />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Fasilitas & Prestasi..." delayMs={800}>
+            <Facility />
+          </CScrollLazySection>
+
+          <CScrollLazySection loaderTitle="Memuat Alur Pendaftaran..." delayMs={800}>
+            <Registration />
+          </CScrollLazySection>
         </div>
-        <Fee />
-        <FAQ />
+
+        <CScrollLazySection loaderTitle="Memuat Rincian Biaya..." delayMs={900}>
+          <Fee />
+        </CScrollLazySection>
+
+        <CScrollLazySection loaderTitle="Memuat Pertanyaan Umum (FAQ)..." delayMs={800}>
+          <FAQ />
+        </CScrollLazySection>
+
         <div className="container">
-          <Contact />
+          <CScrollLazySection loaderTitle="Memuat Kontak & Alamat..." delayMs={800}>
+            <Contact />
+          </CScrollLazySection>
         </div>
       </div>
     </div>

@@ -8,6 +8,8 @@ import { BookArchiveIcon } from "@/lib/icons";
 import { Download } from "lucide-react";
 import { configs } from "@/lib/constants";
 
+import { trackEvent } from "@/lib/analytics";
+
 export default function SidebarMenu({
   isMenuOpen,
   setIsMenuOpen,
@@ -88,7 +90,10 @@ export default function SidebarMenu({
                 icon={<BookArchiveIcon fill="#fff" />}
                 className="font-bold flex items-center justify-center gap-2"
                 variant={"neubrutalist"}
-                onClick={() => handleClick(website)}
+                onClick={() => {
+                  trackEvent('CLICK_REGISTER', { location: 'Mobile Sidebar' });
+                  handleClick(website);
+                }}
               >
                 Daftar Sekarang
               </CButton>
@@ -103,6 +108,7 @@ export default function SidebarMenu({
                   <Download className="size-6 text-white group-hover:text-[#0d4f3c] transition-colors duration-300" />
                 }
                 className="group font-bold !bg-[#0d4f3c] !text-white hover:!bg-white hover:!text-[#0d4f3c] transition-all duration-300 flex items-center justify-center gap-2"
+                onClick={() => trackEvent('CLICK_DOWNLOAD', { location: 'Mobile Sidebar App Button' })}
               >
                 DOWNLOAD APP
               </CButton>
@@ -113,3 +119,4 @@ export default function SidebarMenu({
     </>
   );
 }
+

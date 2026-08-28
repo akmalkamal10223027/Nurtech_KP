@@ -5,6 +5,7 @@ import Loading from "../loading";
 import OverlayWrapper from "../overlay";
 import { useAppContext } from "@/components/layout/context-provider";
 import { SessionProvider } from "next-auth/react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Client({ children }: { children: React.ReactNode }) {
   const { loading, clearLoading, closeOverlay } = useAppContext();
@@ -14,8 +15,10 @@ export default function Client({ children }: { children: React.ReactNode }) {
     if (path) {
       clearLoading();
       closeOverlay();
+      trackEvent('PAGE_VIEW', { path });
     }
   }, [path]);
+
 
   useEffect(() => {
     if (!loading) {
