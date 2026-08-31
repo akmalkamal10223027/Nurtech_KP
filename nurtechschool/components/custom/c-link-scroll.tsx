@@ -22,10 +22,52 @@ export default function CLinkScroll({
   const pathname = usePathname();
   const isHome = pathname === "/";
 
+  const rawTo = (to || "").trim();
+
+  // 1. External links (http://, https://, mailto:, tel:, //)
+  if (/^(https?:|mailto:|tel:|\/\/)/i.test(rawTo)) {
+    return (
+      <a
+        href={rawTo}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn("min-w-fit flex items-center cursor-pointer", className)}
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  // 2. Internal page routes (starts with / but not /# or #)
+  if (rawTo.startsWith("/") && !rawTo.startsWith("/#")) {
+    return (
+      <Link
+        href={rawTo}
+        className={cn("min-w-fit flex items-center cursor-pointer", className)}
+        onClick={onClick}
+      >
+        {children}
+      </Link>
+    );
+  }
+
+  // 3. Anchor section links (e.g. #hero, #about, #facility, #program, #news, or hero, about)
+  let targetId = rawTo.replace(/^\/?#/, "");
+
+  // Alias mapping: #hero -> home section id if hero section id is "home"
+  if (targetId === "hero") {
+    targetId = "home";
+  }
+
+  if (!targetId) {
+    targetId = "home";
+  }
+
   if (!isHome) {
     return (
       <Link
-        href={`/#${to}`}
+        href={`/#${targetId}`}
         className={cn("min-w-fit flex items-center cursor-pointer", className)}
         onClick={onClick}
       >
@@ -36,7 +78,7 @@ export default function CLinkScroll({
 
   return (
     <ScrollLink
-      to={to}
+      to={targetId}
       offset={offset}
       spy
       smooth
@@ -48,3 +90,4 @@ export default function CLinkScroll({
     </ScrollLink>
   );
 }
+
