@@ -9,6 +9,9 @@ import OvForm from "./ov-form";
 import OvExcul from "./ov-excul";
 import OvMenu from "./ov-menu";
 import OvGallery from "./ov-gallery";
+import OvProgram from "./ov-program";
+import OvSchedule from "./ov-schedule";
+import OvFacility from "./ov-facility";
 
 export default function OverlayWrapper() {
   const { isTablet, isMobile } = useBreakpoint();
@@ -30,6 +33,12 @@ export default function OverlayWrapper() {
         return <OvMenu />;
       case OV.GALLERY:
         return <OvGallery />;
+      case OV.PROGRAM:
+        return <OvProgram />;
+      case OV.SCHEDULE:
+        return <OvSchedule />;
+      case OV.FACILITY:
+        return <OvFacility />;
       default:
         return null;
     }

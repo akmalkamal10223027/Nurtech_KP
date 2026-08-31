@@ -39,6 +39,9 @@ export const OV = {
   EXCUL: "EXCUL",
   MENU: "MENU",
   GALLERY: "GALLERY",
+  PROGRAM: "PROGRAM",
+  SCHEDULE: "SCHEDULE",
+  FACILITY: "FACILITY",
 };
 
 export const DUMMY_GROUP = [

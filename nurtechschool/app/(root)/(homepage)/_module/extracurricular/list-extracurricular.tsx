@@ -10,8 +10,11 @@ import { cn } from "@/lib/utils";
 export default function ListExtracurricular() {
   const { respExtracurricular, isLoadingExtracurricular } =
     useExtracurricular();
+
+  const allData = respExtracurricular?.data || [];
+  const displayedData = allData.slice(0, 5);
   const hasOddExtracurricular = Boolean(
-    respExtracurricular?.data?.length && respExtracurricular.data.length % 2,
+    displayedData.length && displayedData.length % 2,
   );
 
   const { setOpenOverlay } = useAppContext();
@@ -31,7 +34,7 @@ export default function ListExtracurricular() {
       >
         <Mapper
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 w-full sm:w-fit max-md:[&>li:last-child:nth-child(odd)]:col-span-2 md:[&>li:last-child:nth-child(odd)]:col-span-1"
-          data={respExtracurricular?.data}
+          data={displayedData}
           isLoading={isLoadingExtracurricular}
           render={(item, index) => (
             <CCard
@@ -42,7 +45,7 @@ export default function ListExtracurricular() {
               subtitle={item?.description}
               className={cn(
                 hasOddExtracurricular &&
-                index === (respExtracurricular?.data?.length || 0) - 1 &&
+                index === (displayedData.length || 0) - 1 &&
                 "max-md:mx-auto max-md:w-[calc(50%-0.25rem)] md:w-full",
               )}
             />
@@ -50,14 +53,16 @@ export default function ListExtracurricular() {
         />
       </motion.div>
 
-      <div className="mt-1 sm:mt-0">
-        <CButton
-          title="Kegiatan Lainnya"
-          size={"default"}
-          animateVariant="secondary"
-          onClick={handleOpenOverlay}
-        />
-      </div>
+      {allData.length > 5 && (
+        <div className="mt-1 sm:mt-0">
+          <CButton
+            title="Kegiatan Lainnya"
+            size={"default"}
+            animateVariant="secondary"
+            onClick={handleOpenOverlay}
+          />
+        </div>
+      )}
     </>
   );
 }

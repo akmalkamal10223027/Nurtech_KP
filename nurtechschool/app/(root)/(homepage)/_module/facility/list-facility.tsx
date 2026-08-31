@@ -4,8 +4,10 @@ import { useState } from "react";
 import CFramedImage from "@/components/custom/c-framed-image";
 import { CardFacility } from "./card-facility";
 import { useAllAbout, useFacility } from "@/services/queries/landing";
-import { configs } from "@/lib/constants";
+import { configs, OV } from "@/lib/constants";
 import { Logo1 } from "@/lib/image";
+import CButton from "@/components/custom/c-button";
+import { useAppContext } from "@/components/layout/context-provider";
 
 const params = {
   populate: {
@@ -25,6 +27,7 @@ const params = {
 export default function ListFacility() {
   const { respFacility } = useFacility();
   const { respAllAbout, isLoadingAllAbout } = useAllAbout(params);
+  const { setOpenOverlay } = useAppContext();
   const [hoveredFacility, setHoveredFacility] = useState<IFacilityData | null>(
     null,
   );
@@ -33,7 +36,8 @@ export default function ListFacility() {
     (item) => item.__component === "shared.media",
   ) as ImageBlock;
   const baseImage = configs.BASE_IMAGE || "";
-  const data = respFacility?.data || [];
+  const allData = respFacility?.data || [];
+  const data = allData.slice(0, 8);
   const defaultImage =
     respMedia?.file?.url && !isLoadingAllAbout
       ? baseImage + respMedia.file.url
@@ -66,9 +70,16 @@ export default function ListFacility() {
   const oddFacilities = data.filter((_, i) => i % 2 !== 0);
   const evenFacilities = data.filter((_, i) => i % 2 === 0);
 
+  const handleOpenOverlay = () => {
+    setOpenOverlay({
+      id: OV.FACILITY,
+      isPadding: false,
+    });
+  };
+
   return (
-    <div className="relative mx-auto w-full max-w-6xl py-6 sm:py-10 xl:py-20">
-      <div className="flex flex-col gap-8 pl-5 pr-3 sm:px-6 xl:hidden">
+    <div className="relative mx-auto w-full max-w-6xl py-6 sm:py-10 xl:py-20 flex flex-col items-center">
+      <div className="flex flex-col gap-8 pl-5 pr-3 sm:px-6 xl:hidden w-full">
         <div className="relative flex justify-center">
           <div className="relative z-10 flex w-full items-center justify-center">
             <CFramedImage
@@ -104,7 +115,7 @@ export default function ListFacility() {
         </div>
       </div>
 
-      <div className="hidden xl:grid grid-cols-3 items-center justify-center gap-6">
+      <div className="hidden xl:grid grid-cols-3 items-center justify-center gap-6 w-full">
         <div className="flex flex-col gap-3 sm:gap-4 items-start w-full">
           {oddFacilities.map((item, i) => {
             const offsetY = i * 6;
@@ -168,6 +179,17 @@ export default function ListFacility() {
           })}
         </div>
       </div>
+
+      {allData.length > 8 && (
+        <div className="mt-8 flex justify-center">
+          <CButton
+            title="Fasilitas Lainnya"
+            size={"default"}
+            animateVariant="secondary"
+            onClick={handleOpenOverlay}
+          />
+        </div>
+      )}
     </div>
   );
 }

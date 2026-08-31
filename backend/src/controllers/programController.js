@@ -3,8 +3,12 @@ const { formatMedia, sendResponse } = require('../utils/formatter');
 
 const getPrograms = async (req, res, next) => {
   try {
+    const limit = req.query.limit || req.query['pagination[limit]'] || req.query.pageSize || req.query['pagination[pageSize]'];
+    const take = limit ? parseInt(limit) : undefined;
+
     const programs = await prisma.featuredProgram.findMany({
-      orderBy: { position: 'asc' }
+      orderBy: { position: 'asc' },
+      ...(take && !isNaN(take) ? { take } : {})
     });
 
     const formatted = programs.map(p => ({

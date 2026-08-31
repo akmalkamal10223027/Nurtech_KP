@@ -62,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     { id: 'gallery', label: 'Galeri Kegiatan', icon: Images },
     { id: 'programs', label: 'Program & Ekskul', icon: BookOpen },
     { id: 'app_section', label: 'Aplikasi Boarding School', icon: Smartphone },
-    { id: 'schedules', label: 'Aktivitas & Rutinitas', icon: Clock },
+    { id: 'schedules', label: 'Aktivitas', icon: Clock },
     { id: 'articles', label: 'Berita & Artikel', icon: Newspaper },
     { id: 'facilities', label: 'Fasilitas & Prestasi', icon: Building2 },
     { id: 'registration', label: 'Pendaftaran & Biaya', icon: FileCheck2 },
@@ -101,8 +101,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${isActive
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70'
                 }`}
             >
               <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}`} />

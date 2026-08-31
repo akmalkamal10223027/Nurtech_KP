@@ -1,0 +1,33 @@
+# SMP Islam Nurtech
+
+> SMP Islam Nurtech adalah lembaga pendidikan menengah pertama berbasis Islam dan teknologi yang unggul dalam pembentukan karakter islami, kepemimpinan, akademik, dan literasi digital.
+
+## Ringkasan Profil
+- **Nama Sekolah**: SMP Islam Nurtech
+- **Jenis Pendidikan**: Sekolah Menengah Pertama (SMP) Islam
+- **Fokus Utama**: Integrasi Nilai Islam, Tahfidz Al-Qur'an, Sains & Teknologi, Keterampilan Digital, dan Bahasa Internasional.
+- **Website Resmi**: https://nurtechschool.id (atau domain utama Nurtech School)
+
+## Program Keunggulan & Kurikulum
+- **Integrasi Kurikulum Merdeka & Keislaman**: Pembelajaran berbasis proyek dengan penguatan akidah, adab, dan akhlakul karimah.
+- **Program Tahfidz & Tahsin Al-Qur'an**: Pembimbingan intensif hafalan dan tajwid Al-Qur'an.
+- **Literasi Digital & Teknologi (Tech-Savvy)**: Pemrograman dasar, penggunaan teknologi pembelajaran modern, dan etika berinternet.
+- **Ekstrakurikuler & Pembentukan Karakter**: Pramuka, Panahan, Coding/Robotika, Public Speaking, Seni Islam, dan Olahraga.
+
+## Fasilitas Sekolah
+- Ruang Kelas Ber-AC & Multimedia Interactive
+- Laboratorium Komputer & Teknologi
+- Perpustakaan Digital & Ruang Baca
+- Musholla & Area Kegiatan Keagamaan
+- Lapangan Olahraga & Area Terbuka Hijau
+
+## Kontak & Pendaftaran (PPDB)
+- **Website**: https://nurtechschool.id
+- **Informasi Pendaftaran (PPDB)**: Tersedia secara online melalui portal website resmi.
+- **WhatsApp Support**: +62 822-4038-6822
+
+## Struktur Halaman Utama Website
+- [Beranda](https://nurtechschool.id/): Informasi umum, profil kepala sekolah, berita terbaru, pengumuman, serta highlight 3 galeri kegiatan terbaru (disertai tombol "Kegiatan Lainnya" untuk melihat seluruh kegiatan).
+- [Berita & Artikel](https://nurtechschool.id/news): Informasi kegiatan siswa, pengumuman sekolah, dan artikel edukasi.
+- [Galeri Kegiatan](https://nurtechschool.id/gallery): Seluruh foto dan arsip dokumentasi kegiatan pembelajaran, ekstrakurikuler, serta fasilitas sekolah secara lengkap.
+

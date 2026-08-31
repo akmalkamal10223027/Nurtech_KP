@@ -76,7 +76,7 @@ export function App() {
     gallery: { title: 'Galeri Dokumentasi', subtitle: 'Album foto dan momen kegiatan sekolah' },
     programs: { title: 'Program Unggulan & Ekskul', subtitle: 'Jurusan teknologi, tahfizh, dan ekstrakurikuler' },
     app_section: { title: 'Aplikasi Boarding School', subtitle: 'Fitur pendukung santri, wali murid, dan mockup mobile app' },
-    schedules: { title: 'Aktivitas & Rutinitas Siswa', subtitle: 'Kelola jadwal agenda, rutinitas, dan kegiatan harian siswa' },
+    schedules: { title: 'Aktivitas Siswa', subtitle: 'Kelola jadwal agenda dan kegiatan harian siswa' },
     articles: { title: 'Berita & Artikel', subtitle: 'Publikasi dan kelola konten artikel, kabar sekolah, dan kategori' },
     categories: { title: 'Kategori Berita', subtitle: 'Manajemen rubrik dan taksonomi konten' },
     facilities: { title: 'Fasilitas & Prestasi', subtitle: 'Sarana belajar dan pencapaian siswa' },

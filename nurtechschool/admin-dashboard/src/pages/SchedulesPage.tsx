@@ -178,7 +178,7 @@ export const SchedulesPage: React.FC<SchedulesPageProps> = ({ showToast }) => {
                   <tr>
                     <th className="px-6 py-3.5 w-16">#</th>
                     <th className="px-6 py-3.5">Waktu Pelaksanaan</th>
-                    <th className="px-6 py-3.5">Nama Aktivitas / Rutinitas Santri</th>
+                    <th className="px-6 py-3.5">Aktivitas</th>
                     <th className="px-6 py-3.5 text-right">Aksi</th>
                   </tr>
                 </thead>
@@ -247,11 +247,10 @@ export const SchedulesPage: React.FC<SchedulesPageProps> = ({ showToast }) => {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
-                        validCurrentPage === pageNum
+                      className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${validCurrentPage === pageNum
                           ? 'bg-emerald-600 text-white shadow-sm'
                           : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {pageNum}
                     </button>
@@ -280,7 +279,7 @@ export const SchedulesPage: React.FC<SchedulesPageProps> = ({ showToast }) => {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nama Aktivitas / Rutinitas *</label>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nama Aktivitas Siswa *</label>
             <input
               type="text"
               required

@@ -23,7 +23,7 @@ export default function ListActivity() {
           sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible
           sm:[&>li]:w-full sm:[&>li]:shrink
         "
-        data={respGalleryActivity?.data || []}
+        data={(respGalleryActivity?.data || []).slice(0, 3)}
         isLoading={isLoadingGalleryActivity}
         render={(item, index) => {
           const thumbnailUrl =

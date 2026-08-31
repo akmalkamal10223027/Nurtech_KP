@@ -36,7 +36,7 @@ export default function HomePage() {
             <AppSection />
           </CScrollLazySection>
 
-          <CScrollLazySection loaderTitle="Memuat Aktivitas & Rutinitas..." delayMs={800}>
+          <CScrollLazySection loaderTitle="Memuat Aktivitas Siswa..." delayMs={800}>
             <Scheduled />
           </CScrollLazySection>
 

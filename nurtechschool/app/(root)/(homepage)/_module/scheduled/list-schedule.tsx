@@ -7,6 +7,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PiEmpty } from "react-icons/pi";
 import { useMobileActive } from "@/lib/hook";
 
+import { OV } from "@/lib/constants";
+import CButton from "@/components/custom/c-button";
+import { useAppContext } from "@/components/layout/context-provider";
+
 function ScheduleCardItem({ item, index }: { item: any; index: number }) {
   const { ref, isActive } = useMobileActive();
 
@@ -57,8 +61,17 @@ function ScheduleCardItem({ item, index }: { item: any; index: number }) {
 
 export default function ListSchedule() {
   const { respSchedule, isLoadingSchedule } = useSchedule();
+  const { setOpenOverlay } = useAppContext();
 
-  const data = respSchedule?.data || [];
+  const allData = respSchedule?.data || [];
+  const data = allData.slice(0, 6);
+
+  const handleOpenOverlay = () => {
+    setOpenOverlay({
+      id: OV.SCHEDULE,
+      isPadding: false,
+    });
+  };
 
   if (isLoadingSchedule) {
     return (
@@ -86,10 +99,23 @@ export default function ListSchedule() {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-12 md:gap-6 w-full md:w-auto md:grid-rows-2 overflow-visible pb-24 md:pb-0">
-      {data.map((item, index) => (
-        <ScheduleCardItem key={item.id} item={item} index={index} />
-      ))}
+    <div className="flex flex-col items-center gap-12 w-full">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-12 md:gap-6 w-full md:w-auto md:grid-rows-2 overflow-visible pb-24 md:pb-0">
+        {data.map((item, index) => (
+          <ScheduleCardItem key={item.id} item={item} index={index} />
+        ))}
+      </div>
+
+      {allData.length > 6 && (
+        <div className="mt-4 flex justify-center">
+          <CButton
+            title="Aktivitas Lainnya"
+            size={"default"}
+            animateVariant="secondary"
+            onClick={handleOpenOverlay}
+          />
+        </div>
+      )}
     </div>
   );
 }
