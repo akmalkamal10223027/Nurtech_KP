@@ -687,6 +687,14 @@ const getAppSection = async (req, res, next) => {
       ];
     }
 
+    const cleanLink = (url) => {
+      if (!url) return '#';
+      let cleaned = String(url).trim().replace(/^#+/, '');
+      if (!cleaned || cleaned === '#') return '#';
+      if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) return cleaned;
+      return `https://${cleaned}`;
+    };
+
     const formatted = {
       id: item.id || 1,
       documentId: item.documentId || item.document_id || 'app-section-1',
@@ -694,8 +702,8 @@ const getAppSection = async (req, res, next) => {
       title: item.title || 'Aplikasi Pendukung',
       titleHighlight: item.titleHighlight || item.title_highlight || 'Nurtech Boarding School',
       description: item.description || '',
-      appStoreLink: item.appStoreLink || item.app_store_link || '#',
-      googlePlayLink: item.googlePlayLink || item.google_play_link || '#',
+      appStoreLink: cleanLink(item.appStoreLink || item.app_store_link),
+      googlePlayLink: cleanLink(item.googlePlayLink || item.google_play_link || 'https://play.google.com/store/apps/details?id=id.oxinos.nurtech'),
       images: imagesList.map((url, idx) => ({ id: idx + 1, url })),
       features: featuresList,
       Stakeholder: [

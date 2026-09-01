@@ -90,7 +90,7 @@ export default function ItemTop({ data }: { data?: IFooterData }) {
         </a>
 
         <a
-          href="#"
+          href="https://play.google.com/store/apps/details?id=id.oxinos.nurtech"
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 sm:flex-none flex items-center justify-center gap-2.5 bg-white/10 border border-white/20 text-white px-4 py-2.5 rounded-xl hover:bg-white/20 transition-all duration-300 active:scale-95 min-w-[130px]"

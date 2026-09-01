@@ -130,13 +130,34 @@ export default function AppSection() {
     );
   };
 
+  const formatExternalLink = (rawUrl?: string, defaultUrl = "#") => {
+    if (!rawUrl) return defaultUrl;
+    let cleaned = rawUrl.trim().replace(/^#+/, "");
+    if (!cleaned || cleaned === "#") return defaultUrl;
+    if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) {
+      return cleaned;
+    }
+    return `https://${cleaned}`;
+  };
+
   const renderDownloadButtons = () => {
+    const appStoreUrl = formatExternalLink(data.appStoreLink, "#");
+    const playStoreUrl = formatExternalLink(
+      data.googlePlayLink,
+      "https://play.google.com/store/apps/details?id=id.oxinos.nurtech"
+    );
+
     return (
       <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-2 w-full">
         <a
-          href={data.appStoreLink || "#"}
-          target="_blank"
+          href={appStoreUrl}
+          target={appStoreUrl !== "#" ? "_blank" : undefined}
           rel="noopener noreferrer"
+          onClick={(e) => {
+            if (appStoreUrl === "#") {
+              e.preventDefault();
+            }
+          }}
           className="flex-1 flex items-center justify-center gap-2.5 bg-white text-gray-900 px-3.5 py-2.5 rounded-xl hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg transform active:scale-95 min-w-0"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -151,7 +172,7 @@ export default function AppSection() {
         </a>
 
         <a
-          href={data.googlePlayLink || "#"}
+          href={playStoreUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-2.5 bg-white text-gray-900 px-3.5 py-2.5 rounded-xl hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg transform active:scale-95 min-w-0"
