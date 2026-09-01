@@ -4,6 +4,7 @@
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useEffect, useRef } from "react";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -12,7 +13,41 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
+function patchTileImages(container: HTMLElement) {
+  const imgs = container.querySelectorAll<HTMLImageElement>(
+    ".leaflet-tile-pane img"
+  );
+  imgs.forEach((img) => {
+    if (!img.getAttribute("width")) img.setAttribute("width", "256");
+    if (!img.getAttribute("height")) img.setAttribute("height", "256");
+    if (!img.getAttribute("loading")) img.setAttribute("loading", "lazy");
+    if (!img.getAttribute("title")) img.setAttribute("title", "Map tile");
+  });
+}
+
 export default function Map({ pos }: { pos: any }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = mapRef.current;
+    if (!container) return;
+
+    // Patch existing tiles
+    patchTileImages(container);
+
+    // Observe for new tiles loaded dynamically
+    const observer = new MutationObserver(() => {
+      patchTileImages(container);
+    });
+
+    const tilePane = container.querySelector(".leaflet-tile-pane");
+    if (tilePane) {
+      observer.observe(tilePane, { childList: true, subtree: true });
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   if (!pos || isNaN(pos.lat) || isNaN(pos.lng)) {
     return (
       <div className="h-[400px] w-full max-w-[592px] rounded-2xl bg-muted flex items-center justify-center">
@@ -25,7 +60,7 @@ export default function Map({ pos }: { pos: any }) {
 
   return (
     <div className="h-[400px] w-full xl:max-w-[592px] relative">
-      <div className="size-full rounded-2xl relative z-0 isolate overflow-hidden">
+      <div ref={mapRef} className="size-full rounded-2xl relative z-0 isolate overflow-hidden">
         <MapContainer
           center={[pos.lat, pos.lng]}
           zoom={13}
