@@ -6,7 +6,6 @@ export default function Activity() {
   return (
     <div
       className="flex flex-col items-center justify-center gap-8 sm:gap-12 lg:gap-16"
-      id="activity"
     >
       <Header
         title="Galeri Kegiatan"

@@ -40,7 +40,7 @@ export default function ItemTop({ data }: { data?: IFooterData }) {
             )}
           </div>
           <div className="flex flex-col gap-0.5 sm:gap-1 text-base sm:text-lg md:text-xl">
-            <h1 className="font-primary font-medium opacity-90">{data.menu}</h1>
+            <span className="font-primary font-medium opacity-90">{data.menu}</span>
             <h2 className="font-primary font-bold">{data.data}</h2>
 
             {/* Sub-menus for About section if present */}

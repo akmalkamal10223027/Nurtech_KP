@@ -9,6 +9,7 @@ interface ScrollLazySectionProps {
   className?: string;
   loaderTitle?: string;
   minHeight?: string;
+  id?: string;
 }
 
 export default function CScrollLazySection({
@@ -17,12 +18,33 @@ export default function CScrollLazySection({
   className,
   loaderTitle = "Memuat bagian...",
   minHeight = "min-h-[300px]",
+  id,
 }: ScrollLazySectionProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Check initial hash matching
+    if (id && typeof window !== "undefined") {
+      const currentHash = window.location.hash.replace("#", "");
+      if (currentHash === id) {
+        setIsVisible(true);
+        setIsLoaded(true);
+        return;
+      }
+    }
+
+    const handleLoadSection = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (id && customEvent.detail === id) {
+        setIsVisible(true);
+        setIsLoaded(true);
+      }
+    };
+
+    window.addEventListener("load-section", handleLoadSection);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -30,27 +52,34 @@ export default function CScrollLazySection({
           observer.disconnect();
         }
       },
-      { rootMargin: "120px 0px", threshold: 0.05 }
+      { rootMargin: "150px 0px", threshold: 0.05 }
     );
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      window.removeEventListener("load-section", handleLoadSection);
+      observer.disconnect();
+    };
+  }, [id]);
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && !isLoaded) {
       const timer = setTimeout(() => {
         setIsLoaded(true);
       }, delayMs);
       return () => clearTimeout(timer);
     }
-  }, [isVisible, delayMs]);
+  }, [isVisible, isLoaded, delayMs]);
 
   return (
-    <div ref={sectionRef} className={cn("w-full transition-all duration-700", className)}>
+    <div
+      id={id}
+      ref={sectionRef}
+      className={cn("w-full transition-all duration-700 scroll-mt-28", className)}
+    >
       {!isLoaded ? (
         <div
           className={cn(

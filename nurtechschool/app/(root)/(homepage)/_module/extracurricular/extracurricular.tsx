@@ -3,7 +3,7 @@ import ListExtracurricular from "./list-extracurricular";
 
 export default function Extracurricular() {
   return (
-    <div className="flex flex-col items-center gap-8" id="extracurricular">
+    <div className="flex flex-col items-center gap-8">
       <div className="flex flex-col items-center text-center">
         <div className="mb-4 flex justify-center">
           <CImage
@@ -20,9 +20,9 @@ export default function Extracurricular() {
           Aktivitas Siswa
         </p>
 
-        <h1 className="mt-2 font-primary text-3xl font-bold md:text-4xl">
+        <h2 className="mt-2 font-primary text-3xl font-bold md:text-4xl">
           Kegiatan Ekstrakurikuler
-        </h1>
+        </h2>
       </div>
 
       <ListExtracurricular />

@@ -45,10 +45,11 @@ export default function CCardGalleryDetail({
         <CImage
           src={src}
           alt={alt}
-          fill
+          width={600}
+          height={450}
           unoptimized
           className={cn(
-            "transition-transform duration-500 group-hover:scale-110",
+            "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110",
             contentClassName,
           )}
         />

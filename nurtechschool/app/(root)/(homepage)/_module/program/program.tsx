@@ -5,7 +5,6 @@ export default function Program() {
   return (
     <div
       className="flex flex-col items-center justify-center gap-16"
-      id="program"
     >
       <Header
         title="Program Unggulan"

@@ -2,7 +2,7 @@
 
 Aplikasi terpadu portal sekolah Nurtech School yang terdiri dari:
 1. **Backend Express.js** (`backend/`) - REST API dengan MySQL (Laragon) & Prisma ORM.
-2. **Admin Dashboard** (`nurtechschool/admin-dashboard/`) - Panel manajemen konten modern & responsif (React + Vite + Tailwind CSS).
+2. **Admin Dashboard** (`admin-dashboard/`) - Panel manajemen konten modern & responsif (React + Vite + Tailwind CSS).
 3. **Public Website Frontend** (`nurtechschool/`) - Portal publik sekolah (Next.js App Router).
 
 ---
@@ -26,9 +26,9 @@ npm run dev          # Menjalankan server di http://localhost:1337
 - **Password:** `admin123`
 
 ### 3. Jalankan Frontend Admin Dashboard
-Buka terminal baru pada folder `nurtechschool/admin-dashboard/`:
+Buka terminal baru pada folder `admin-dashboard/`:
 ```bash
-cd nurtechschool/admin-dashboard
+cd admin-dashboard
 npm run dev          # Menjalankan Admin Dashboard di http://localhost:5173
 ```
 

@@ -18,7 +18,6 @@ export default function FAQ() {
   if (isLoadingFAQ) {
     return (
       <section
-        id="faq"
         className="py-16 sm:py-20 flex justify-center px-3 sm:px-0"
       >
         <div className="container relative flex flex-col items-center justify-center">
@@ -67,7 +66,6 @@ export default function FAQ() {
 
   return (
     <section
-      id="faq"
       className="py-16 sm:py-20 flex justify-center px-3 sm:px-0"
     >
       <div className="container relative flex flex-col items-center justify-center">

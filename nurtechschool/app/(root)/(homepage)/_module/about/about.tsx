@@ -37,7 +37,6 @@ export default function About() {
   return (
     <div
       className="flex flex-col items-center justify-center gap-16"
-      id="about"
     >
       <Header
         title={respQuote?.title || respAllAbout?.data?.title}

@@ -46,9 +46,9 @@ const ListItem = ({
         />
       </svg>
       <div className="">
-        <h1 className="font-primary font-bold md:text-3xl text-2xl md:text-left text-center">
+        <h2 className="font-primary font-bold md:text-3xl text-2xl md:text-left text-center">
           {title}
-        </h1>
+        </h2>
         <p className="md:text-xl text-lg md:text-left text-center">
           {description}
         </p>

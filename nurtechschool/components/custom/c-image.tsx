@@ -56,6 +56,8 @@ const CImage = ({
   const source = !isError && processedSrc != null && processedSrc !== "";
   const link = source ? processedSrc : fallbackSrc || Default;
   const props = fill ? { fill, sizes: "100%" } : { sizes: "100vw" };
+  const finalWidth = fill ? undefined : (width || 800);
+  const finalHeight = fill ? undefined : (height || 600);
 
   const isLocalHostUrl = typeof link === "string" && (link.includes("localhost") || link.includes("127.0.0.1"));
   const shouldUnoptimize = unoptimized !== undefined ? unoptimized : isLocalHostUrl;
@@ -86,8 +88,8 @@ const CImage = ({
         )}
         src={link}
         alt={alt || "Image"}
-        width={width}
-        height={height}
+        width={finalWidth}
+        height={finalHeight}
         style={style}
         placeholder="empty"
         onError={() => setIsError(true)}

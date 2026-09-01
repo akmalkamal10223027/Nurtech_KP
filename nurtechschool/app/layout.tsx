@@ -24,9 +24,9 @@ const fPrimary = Cinzel({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = (
+  const siteUrl = (
     process.env.NEXT_PUBLIC_SITE_URL ||
-    configs.WEBSITE_URL ||
+    process.env.NEXT_PUBLIC_DOMAIN ||
     "https://nurtechschool.id"
   ).replace(/\/$/, "");
 
@@ -46,21 +46,28 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const siteName = global?.data?.siteName || "SMP Islam Nurtech";
   const metaTitle = global?.data?.defaultSeo?.metaTitle || siteName;
-  const metaDescription =
+  const rawDescription =
     global?.data?.defaultSeo?.metaDescription ||
     global?.data?.siteDescription ||
     "SMP Islam Nurtech adalah sekolah menengah pertama Islam berbasis teknologi dan tahfidz Al-Qur'an.";
+
+  const metaDescription =
+    rawDescription.replace(/\s+/g, " ").trim().length > 160
+      ? rawDescription.replace(/\s+/g, " ").trim().slice(0, 157) + "..."
+      : rawDescription.replace(/\s+/g, " ").trim();
 
   const baseImage = configs.BASE_IMAGE || "";
   const faviconUrl = global?.data?.favicon?.url
     ? baseImage + global.data.favicon.url
     : "/images/icon/logo1.svg";
+
+  const defaultOgImage = `${siteUrl}/images/image/image-banner.jpg`;
   const ogImageUrl = global?.data?.defaultSeo?.shareImage?.url
     ? baseImage + global.data.defaultSeo.shareImage.url
-    : undefined;
+    : defaultOgImage;
 
   return {
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(siteUrl),
     title: {
       default: metaTitle,
       template: `%s | ${siteName}`,
@@ -75,7 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "PPDB SMP Islam Nurtech",
       "Pendidikan Karakter Islam",
     ],
-    authors: [{ name: siteName, url: baseUrl }],
+    authors: [{ name: siteName, url: siteUrl }],
     robots: {
       index: true,
       follow: true,
@@ -88,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     alternates: {
-      canonical: baseUrl,
+      canonical: siteUrl,
     },
     icons: {
       icon: faviconUrl,
@@ -99,25 +106,23 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: siteName,
       title: metaTitle,
       description: metaDescription,
-      url: baseUrl,
+      url: siteUrl,
       type: "website",
       locale: "id_ID",
-      images: ogImageUrl
-        ? [
-            {
-              url: ogImageUrl,
-              width: 1200,
-              height: 630,
-              alt: siteName,
-            },
-          ]
-        : [],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: siteName,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: metaTitle,
       description: metaDescription,
-      images: ogImageUrl ? [ogImageUrl] : [],
+      images: [ogImageUrl],
     },
   };
 }

@@ -21,9 +21,9 @@ export default function OvExcul() {
         height={200}
       />
       {/* Title */}
-      <h1 className="font-primary font-bold text-2xl sm:text-3xl md:text-[33px] text-center text-black mb-8 sm:mb-10 text-shadow-[0_4px_8px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.30)]">
+      <h2 className="font-primary font-bold text-2xl sm:text-3xl md:text-[33px] text-center text-black mb-8 sm:mb-10 text-shadow-[0_4px_8px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.30)]">
         EKSTRAKURIKULER
-      </h1>
+      </h2>
 
       {/* Activities Grid */}
       <Mapper

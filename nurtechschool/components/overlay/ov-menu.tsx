@@ -18,9 +18,9 @@ export default function OvMenu() {
       <nav className="flex flex-col gap-6">
         {CONTENT.map((item, idx) => (
           <CLinkScroll key={idx} to={item.id} onClick={closeOverlay}>
-            <h1 className="font-bold text-lg text-secondary-500 hover:text-primary-500 transition-colors">
+            <span className="font-bold text-lg text-secondary-500 hover:text-primary-500 transition-colors">
               {item.label}
-            </h1>
+            </span>
           </CLinkScroll>
         ))}
       </nav>

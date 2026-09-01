@@ -6,7 +6,7 @@ import Header from "../about/header";
 
 export default function News() {
   return (
-    <div className="container flex flex-col gap-7" id="news">
+    <div className="container flex flex-col gap-7">
       <Header title="Berita dan Artikel" />
       <ListNews />
 

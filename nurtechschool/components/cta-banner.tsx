@@ -25,10 +25,10 @@ export default function CTABanner() {
 
       {/* Overlay & Content */}
       <div className="absolute inset-0 bg-secondary-950/60 flex flex-col items-center justify-center gap-8 md:gap-12 p-6 md:p-12">
-        <h1 className="font-primary text-white text-2xl md:text-5xl lg:text-6xl text-center font-semibold drop-shadow-lg">
+        <h2 className="font-primary text-white text-2xl md:text-5xl lg:text-6xl text-center font-semibold drop-shadow-lg">
           Belajar Al-Qur&apos;an, Kuasai
           <br className="hidden md:block" /> Teknologi, Raih Prestasi
-        </h1>
+        </h2>
 
         {website && (
           <CButton

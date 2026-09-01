@@ -5,7 +5,6 @@ export default function Facility() {
   return (
     <div
       className="flex flex-col items-center justify-center gap-6 sm:gap-8"
-      id="facility"
     >
       <Header
         title="Fasilitas"

@@ -21,7 +21,7 @@ export default function CHeaderHero({
         className,
       )}
     >
-      <Header title={title} className="text-background" />
+      <Header title={title} className="text-background" as="h1" />
       <CBreadcrumb items={breadcrumbItems} />
     </div>
   );

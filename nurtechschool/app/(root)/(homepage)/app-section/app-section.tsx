@@ -172,7 +172,6 @@ export default function AppSection() {
 
   return (
     <section
-      id="app-section"
       className="py-8 sm:py-14 bg-secondary-500 relative overflow-hidden w-full rounded-2xl sm:rounded-3xl"
     >
       <div className="absolute top-0 right-0 w-48 h-48 bg-primary-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>

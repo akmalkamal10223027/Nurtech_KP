@@ -113,7 +113,7 @@ const ListItem = ({
   return (
     <div className="flex items-center gap-1.5">
       {icon}
-      <h1 className="font-bold text-xs">{title}</h1>
+      <span className="font-bold text-xs">{title}</span>
     </div>
   );
 };

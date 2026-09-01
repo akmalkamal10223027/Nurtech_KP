@@ -7,7 +7,7 @@ import { Link } from "next-view-transitions";
 export default function CLinkScroll({
   children,
   to,
-  offset,
+  offset = -100,
   className,
   activeClass,
   onClick,
@@ -64,6 +64,15 @@ export default function CLinkScroll({
     targetId = "home";
   }
 
+  const handleSectionClick = () => {
+    if (onClick) onClick();
+
+    if (isHome && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("load-section", { detail: targetId }));
+      window.history.pushState(null, "", `#${targetId}`);
+    }
+  };
+
   if (!isHome) {
     return (
       <Link
@@ -84,7 +93,7 @@ export default function CLinkScroll({
       smooth
       className={cn("min-w-fit flex items-center cursor-pointer", className)}
       activeClass={activeClass}
-      onClick={onClick}
+      onClick={handleSectionClick}
     >
       {children}
     </ScrollLink>

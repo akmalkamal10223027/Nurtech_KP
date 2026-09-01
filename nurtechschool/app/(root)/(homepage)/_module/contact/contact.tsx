@@ -85,7 +85,6 @@ export default function Contact() {
   return (
     <div
       className="flex flex-col items-center justify-center gap-16"
-      id="contact"
     >
       <Header
         title="Hubungi Kami"

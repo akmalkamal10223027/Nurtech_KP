@@ -22,9 +22,9 @@ export default function OvSchedule() {
         height={200}
       />
       {/* Title */}
-      <h1 className="font-primary font-bold text-2xl sm:text-3xl md:text-[33px] text-center text-black mb-6 sm:mb-8 text-shadow-[0_4px_8px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.30)]">
+      <h2 className="font-primary font-bold text-2xl sm:text-3xl md:text-[33px] text-center text-black mb-6 sm:mb-8 text-shadow-[0_4px_8px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.30)]">
         JADWAL AKTIVITAS
-      </h1>
+      </h2>
 
       {/* Schedule Grid */}
       <div className="overflow-y-auto px-2 sm:px-6 py-4 w-full flex-1 min-h-0 custom-scrollbar">
