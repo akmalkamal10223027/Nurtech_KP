@@ -17,6 +17,7 @@ export default function OvSchedule() {
       <Image
         src={DetailTop}
         alt="Detail Top"
+        title="Detail Top"
         className="absolute top-0 right-0 pointer-events-none"
         width={200}
         height={200}
@@ -43,6 +44,7 @@ export default function OvSchedule() {
       <Image
         src={DetailBottom}
         alt="Detail Bottom"
+        title="Detail Bottom"
         className="absolute bottom-0 left-0 pointer-events-none"
         width={200}
         height={200}

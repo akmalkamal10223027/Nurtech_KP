@@ -13,9 +13,10 @@ export default function Hero() {
       <CImage
         src={School}
         alt="School"
-        className="object-cover object-center pointer-events-none"
+        width={1920}
+        height={1080}
+        className="w-full h-full object-cover object-center pointer-events-none"
         contentClassName="absolute inset-0 -z-10"
-        fill
       />
 
       <div className="absolute inset-0 bg-secondary-500/60 pointer-events-none" />
@@ -29,6 +30,7 @@ export default function Hero() {
         width={200}
         height={200}
         alt="Hero Hole"
+        title="Hero Hole"
       />
     </section>
   );

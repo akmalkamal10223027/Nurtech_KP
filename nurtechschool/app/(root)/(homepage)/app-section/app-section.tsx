@@ -249,6 +249,10 @@ export default function AppSection() {
                         <img
                           src={getStrapiMediaUrl(image.url, apiUrl)}
                           alt={image.alternativeText || "App Mockup"}
+                          title={image.alternativeText || "App Mockup"}
+                          width={400}
+                          height={800}
+                          loading="lazy"
                           className="w-full h-auto drop-shadow-xl"
                         />
                       </div>

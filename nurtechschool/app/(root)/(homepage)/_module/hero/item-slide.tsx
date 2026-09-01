@@ -56,8 +56,9 @@ function HeroButton({ btn, baseImage }: { btn: any; baseImage?: string }) {
               <CImage
                 src={getImageUrl(iconUrl, baseImage)}
                 alt={btn.title}
-                fill
-                className="object-contain"
+                width={24}
+                height={24}
+                className="w-full h-full object-contain"
                 animationHover={false}
               />
             </div>
@@ -78,6 +79,7 @@ type HeroSlideProps = {
   button: any[];
   total?: number;
   currentIndex?: number;
+  slideIndex?: number;
   onClickDot?: (index: number) => void;
 };
 
@@ -89,9 +91,11 @@ export default function HeroSlide({
   button,
   total = 0,
   currentIndex = 0,
+  slideIndex = 0,
   onClickDot,
 }: HeroSlideProps) {
   const baseImage = configs.BASE_IMAGE;
+  const MotionHeading = slideIndex === 0 ? motion.h1 : motion.h2;
 
   return (
     <div className="relative w-full h-full overflow-hidden">
@@ -114,7 +118,7 @@ export default function HeroSlide({
           transition={{ duration: 0.8 }}
           className="w-full lg:max-w-[500px] text-center lg:text-left flex flex-col items-center lg:items-start"
         >
-          <motion.h1
+          <MotionHeading
             initial={false}
             animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{
@@ -124,7 +128,7 @@ export default function HeroSlide({
             className="text-2xl sm:text-4xl md:text-5xl font-bold text-white leading-tight max-w-md sm:max-w-none"
           >
             {title}
-          </motion.h1>
+          </MotionHeading>
 
           <motion.p
             initial={false}

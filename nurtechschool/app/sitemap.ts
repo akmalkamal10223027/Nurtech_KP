@@ -4,7 +4,7 @@ import { configs } from "@/lib/constants";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (
     process.env.NEXT_PUBLIC_SITE_URL ||
-    configs.WEBSITE_URL ||
+    process.env.NEXT_PUBLIC_DOMAIN ||
     "https://nurtechschool.id"
   ).replace(/\/$/, "");
 

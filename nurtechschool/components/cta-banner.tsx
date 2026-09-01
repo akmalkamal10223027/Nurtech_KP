@@ -19,8 +19,10 @@ export default function CTABanner() {
       <Image
         src={ImageBanner}
         alt="CTA Banner"
-        fill
-        className="object-cover transition-transform duration-700"
+        title="CTA Banner"
+        width={1200}
+        height={400}
+        className="w-full h-full object-cover transition-transform duration-700"
       />
 
       {/* Overlay & Content */}

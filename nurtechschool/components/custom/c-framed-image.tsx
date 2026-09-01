@@ -58,8 +58,9 @@ export default function CFramedImage({
           src={src}
           fallbackSrc={fallbackSrc}
           alt={alt}
-          fill
-          className={cn("object-cover", imageClassName)}
+          width={width || 600}
+          height={height || 600}
+          className={cn("w-full h-full object-cover", imageClassName)}
           unoptimized={unoptimized}
         />
       </div>

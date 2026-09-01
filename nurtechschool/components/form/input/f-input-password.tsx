@@ -20,7 +20,7 @@ export default function FInputPassword({
 
       <div className="input-trigger">
         {icon && (
-          <Image src={icon} alt={`${field.name}-icon`} width={18} height={18} />
+          <Image src={icon} alt={`${field.name}-icon`} title={`${field.name} icon`} width={18} height={18} />
         )}
         <input
           {...inputProps}

@@ -413,7 +413,7 @@ const getGlobal = async (req, res, next) => {
         data: {
           siteName: 'Nurtech School',
           siteDescription: 'Sekolah Masa Depan Berbasis Teknologi & Karakter Unggul',
-          metaTitle: 'Nurtech School - Portal Resmi',
+          metaTitle: 'Nurtech School',
           metaDescription: 'Portal Resmi Informasi Pendaftaran dan Kegiatan Nurtech School'
         }
       });

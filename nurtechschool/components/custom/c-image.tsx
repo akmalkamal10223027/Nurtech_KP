@@ -19,7 +19,8 @@ const CImage = ({
   unoptimized,
   priority = false,
   animationHover = true,
-}: ICImage & { priority?: boolean }) => {
+  title,
+}: ICImage & { priority?: boolean; title?: string }) => {
   const [isError, setIsError] = useState(false);
 
   const sanitizeSrc = (input: any) => {
@@ -88,6 +89,7 @@ const CImage = ({
         )}
         src={link}
         alt={alt || "Image"}
+        title={title || alt || "Image"}
         width={finalWidth}
         height={finalHeight}
         style={style}

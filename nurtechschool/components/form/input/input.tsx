@@ -9,7 +9,7 @@ type InputTriggerProps = InputHTMLAttributes<HTMLInputElement> & {
 export function Input({ icon, name, ...inputProps }: InputTriggerProps) {
   return (
     <div className="input-trigger">
-      {icon && <Image src={icon} alt={`${name}-icon`} width={18} height={18} />}
+      {icon && <Image src={icon} alt={`${name}-icon`} title={`${name} icon`} width={18} height={18} />}
       <input {...inputProps} />
     </div>
   );

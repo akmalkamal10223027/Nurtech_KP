@@ -40,7 +40,7 @@ export default function CardSchedule({
         )}
         style={maskStyle}
       />
-      <h1
+      <h3
         className={cn(
           "font-primary font-bold z-10 transition-all duration-400 line-clamp-2 text-balance px-1",
           "text-[9px] sm:text-xs md:text-sm leading-snug tracking-tight",
@@ -49,7 +49,7 @@ export default function CardSchedule({
         )}
       >
         {title}
-      </h1>
+      </h3>
       <p
         className={cn(
           "font-medium z-10 transition-all duration-400 line-clamp-1",

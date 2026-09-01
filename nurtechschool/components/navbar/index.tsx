@@ -68,6 +68,7 @@ export default function Navbar() {
                 <Image
                   src={Logo}
                   alt="Logo"
+                  title="Logo Nurtech School"
                   width={100}
                   height={100}
                   className="absolute top-0 left-8"

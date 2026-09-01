@@ -22,7 +22,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     return (
       <RSelect.Root value={value} onValueChange={onValueChange}>
         <div className="input-trigger">
-          {icon && <Image src={icon} alt={`icon`} width={18} height={18} />}
+          {icon && <Image src={icon} alt={`icon`} title="Select icon" width={18} height={18} />}
           <RSelect.Trigger
             className={cn(
               "input inline-flex items-center justify-between",

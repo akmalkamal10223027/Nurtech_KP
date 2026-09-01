@@ -38,14 +38,15 @@ export async function generateMetadata(): Promise<Metadata> {
         apiKey: configs.API_KEY,
         Authorization: `Bearer ${configs.TOKEN}`,
       },
-      next: { revalidate: 10 },
+      cache: "no-store",
     },
   )
     .then((res) => res.json())
     .catch(() => null);
 
-  const siteName = global?.data?.siteName || "SMP Islam Nurtech";
-  const metaTitle = global?.data?.defaultSeo?.metaTitle || siteName;
+  const siteName = global?.data?.siteName || "Nurtech School";
+  const rawMetaTitle = global?.data?.defaultSeo?.metaTitle || "Nurtech School";
+  const metaTitle = rawMetaTitle.replace(/\s*-\s*Portal Resmi/gi, "").trim() || "Nurtech School";
   const rawDescription =
     global?.data?.defaultSeo?.metaDescription ||
     global?.data?.siteDescription ||
@@ -133,14 +134,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html lang="id">
-        <head>
-          <JsonLd />
-        </head>
-        <body
-          className={`${fDefault.variable} ${fPrimary.variable} antialiased`}
-        >
+    <html lang="id">
+      <body
+        className={`${fDefault.variable} ${fPrimary.variable} antialiased`}
+      >
+        <JsonLd />
+        <ViewTransitions>
           <AppContextProvider>
             <ToastProvider />
             <QueryProvider>
@@ -151,9 +150,9 @@ export default function RootLayout({
               </ClientProvider>
             </QueryProvider>
           </AppContextProvider>
-        </body>
-      </html>
-    </ViewTransitions>
+        </ViewTransitions>
+      </body>
+    </html>
   );
 }
 

@@ -25,6 +25,7 @@ export default function FInputArea({
           <Image
             src={icon}
             alt={`${field.name}-icon`}
+            title={`${field.name} icon`}
             width={18}
             height={18}
             className="pt-1"

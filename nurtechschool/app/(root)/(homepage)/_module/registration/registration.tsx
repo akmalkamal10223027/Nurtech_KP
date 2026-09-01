@@ -9,6 +9,7 @@ export default function Registration() {
       <Image
         src="/images/icon/card-top.svg"
         alt="Registration Card"
+        title="Registration Card"
         width={532}
         height={209}
         className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px]"
@@ -22,6 +23,7 @@ export default function Registration() {
       <Image
         src="/images/icon/card-bottom.svg"
         alt="Registration Card"
+        title="Registration Card"
         width={310}
         height={209}
         className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px]"

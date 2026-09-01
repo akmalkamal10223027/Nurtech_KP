@@ -60,6 +60,7 @@ export default function CFloatingButton() {
           <Image
             src={WhatsappIcon}
             alt="WhatsApp"
+            title="WhatsApp"
             width={40}
             height={40}
             className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 shrink-0"

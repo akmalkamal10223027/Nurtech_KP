@@ -14,8 +14,9 @@ export default function NewsCard({ item }: { item: INewsData }) {
           <CImage
             src={coverUrl}
             alt={item?.title}
-            className="object-cover group-hover:scale-110 transition-transform duration-700"
-            fill
+            width={600}
+            height={450}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             unoptimized
           />
         </div>

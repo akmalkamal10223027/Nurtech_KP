@@ -24,6 +24,7 @@ export default function FAQ() {
           <Image
             src="/images/icon/card-top.svg"
             alt="FAQ Card Top"
+            title="FAQ Card Top"
             width={532}
             height={209}
             className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
@@ -51,6 +52,7 @@ export default function FAQ() {
           <Image
             src="/images/icon/card-bottom.svg"
             alt="FAQ Card Bottom"
+            title="FAQ Card Bottom"
             width={310}
             height={209}
             className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px] z-10 pointer-events-none"
@@ -72,6 +74,7 @@ export default function FAQ() {
         <Image
           src="/images/icon/card-top.svg"
           alt="FAQ Card Top"
+          title="FAQ Card Top"
           width={532}
           height={209}
           className="absolute -top-10 w-[78%] max-w-[360px] sm:-top-20 sm:max-w-[532px] z-10 pointer-events-none"
@@ -89,6 +92,7 @@ export default function FAQ() {
             <Image
               src={Star}
               alt="Star"
+              title="Star"
               width={75}
               height={75}
               className="size-12 sm:size-[75px]"
@@ -182,6 +186,7 @@ export default function FAQ() {
         <Image
           src="/images/icon/card-bottom.svg"
           alt="FAQ Card Bottom"
+          title="FAQ Card Bottom"
           width={310}
           height={209}
           className="absolute -bottom-9 w-[46%] max-w-[190px] sm:-bottom-15 sm:max-w-[310px] z-10 pointer-events-none"

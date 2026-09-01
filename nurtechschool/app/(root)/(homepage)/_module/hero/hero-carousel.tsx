@@ -46,6 +46,7 @@ export default function HeroCarousel() {
               active={current === index}
               total={respBanner.data.length}
               currentIndex={current}
+              slideIndex={index}
               onClickDot={setCurrent}
             />
           );

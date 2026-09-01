@@ -23,6 +23,7 @@ export default function Header({
       <Image
         src={Star}
         alt="Star"
+        title="Star"
         width={75}
         height={75}
         className="z-20 size-12 sm:size-[75px]"

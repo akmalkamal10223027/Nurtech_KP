@@ -37,7 +37,7 @@ const SelectSearch = React.forwardRef<HTMLButtonElement, SelectSearchProps>(
             role="button"
           >
             <div className="input flex items-center gap-[8px]">
-              {icon && <Image src={icon} alt={`icon`} width={18} height={18} />}
+              {icon && <Image src={icon} alt={`icon`} title="Search icon" width={18} height={18} />}
               <span role="button" className="capitalize">
                 {value || (
                   <span className="text-gray-400/90">{placeholder}</span>
