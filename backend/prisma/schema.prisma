@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -38,7 +39,7 @@ model Article {
   title       String
   slug        String    @unique
   description String?   @db.Text
-  content     String    @db.LongText
+  content     String    @db.Text
   position    Int       @default(0)
   coverUrl    String?   @db.Text
   categoryId  Int?
@@ -153,7 +154,7 @@ model ProfileHeadmaster {
   id          Int      @id @default(autoincrement())
   documentId  String   @default(uuid())
   name        String
-  description String   @db.LongText
+  description String   @db.Text
   avatarUrl   String?  @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -163,8 +164,8 @@ model ProfileHeadmaster {
 model VisionMission {
   id          Int      @id @default(autoincrement())
   documentId  String   @default(uuid())
-  visi        String   @db.LongText
-  misi        String   @db.LongText
+  visi        String   @db.Text
+  misi        String   @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   publishedAt DateTime @default(now())
