@@ -12,7 +12,8 @@ export default function Scheduled() {
               alt="Jadwal Aktivitas"
               width={70}
               height={70}
-              className="mx-auto"
+              className="mx-auto object-contain"
+              contentClassName="size-[70px]"
               animationHover={false}
             />
           </div>

@@ -135,10 +135,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
+      <head>
+        <JsonLd />
+      </head>
       <body
         className={`${fDefault.variable} ${fPrimary.variable} antialiased`}
       >
-        <JsonLd />
         <ViewTransitions>
           <AppContextProvider>
             <ToastProvider />

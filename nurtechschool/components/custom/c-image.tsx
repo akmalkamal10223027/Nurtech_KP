@@ -60,8 +60,9 @@ const CImage = ({
   const finalWidth = fill ? undefined : (width || 800);
   const finalHeight = fill ? undefined : (height || 600);
 
-  const isLocalHostUrl = typeof link === "string" && (link.includes("localhost") || link.includes("127.0.0.1"));
-  const shouldUnoptimize = unoptimized !== undefined ? unoptimized : isLocalHostUrl;
+  const isSvg = typeof link === "string" && link.toLowerCase().includes(".svg");
+  const isLocalPath = typeof link === "string" && (link.startsWith("/") || link.includes("localhost") || link.includes("127.0.0.1"));
+  const shouldUnoptimize = unoptimized !== undefined ? unoptimized : (isLocalPath || isSvg);
 
   const [isLoading, setIsLoading] = useState(!shouldUnoptimize);
 

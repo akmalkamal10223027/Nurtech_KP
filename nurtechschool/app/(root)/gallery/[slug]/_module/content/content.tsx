@@ -41,14 +41,14 @@ export default function Content({
         isLoading={isLoading}
         data={visibleGallery}
         skeletonCount={8}
-        skeletonClassName="aspect-4/3 w-full rounded-2xl sm:rounded-3xl"
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4 w-full"
+        skeletonClassName="aspect-4/3 w-full rounded-xl sm:rounded-3xl"
+        className="grid grid-cols-3 gap-2.5 sm:gap-6 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 w-full"
         render={(item, index) => (
           <CCardGalleryDetail
             key={index}
             src={`${baseImage}${item?.url}`}
             alt={item?.alternativeText || "Gallery Image"}
-            className="aspect-4/3 w-full rounded-2xl shadow-sm sm:rounded-3xl overflow-hidden"
+            className="aspect-4/3 w-full rounded-xl shadow-sm sm:rounded-3xl overflow-hidden"
           />
         )}
       />

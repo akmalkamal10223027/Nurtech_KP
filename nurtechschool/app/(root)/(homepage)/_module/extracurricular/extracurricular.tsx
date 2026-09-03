@@ -12,6 +12,7 @@ export default function Extracurricular() {
             width={70}
             height={70}
             className="object-contain"
+            contentClassName="size-[70px]"
             animationHover={false}
           />
         </div>
