@@ -2,10 +2,9 @@ const { PrismaClient } = require('@prisma/client');
 
 let prisma;
 
-try {
-  prisma = new PrismaClient();
-} catch (error) {
-  console.warn('PrismaClient not generated yet or failed initialization:', error.message);
+if (!global.__prisma) {
+  global.__prisma = new PrismaClient();
 }
+prisma = global.__prisma;
 
 module.exports = prisma;
