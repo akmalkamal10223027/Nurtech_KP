@@ -38,11 +38,15 @@ app.use('/api', apiRoutes);
 // Error Handling Middleware
 app.use(errorHandler);
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`=============================================`);
-  console.log(`  Nurtech School Express Server is Running!  `);
-  console.log(`  Port: http://localhost:${PORT}             `);
-  console.log(`  API Base: http://localhost:${PORT}/api     `);
-  console.log(`=============================================`);
-});
+// Start Server locally (if not imported as serverless function)
+if (process.env.NODE_ENV !== 'production' || require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`=============================================`);
+    console.log(`  Nurtech School Express Server is Running!  `);
+    console.log(`  Port: http://localhost:${PORT}             `);
+    console.log(`  API Base: http://localhost:${PORT}/api     `);
+    console.log(`=============================================`);
+  });
+}
+
+module.exports = app;
