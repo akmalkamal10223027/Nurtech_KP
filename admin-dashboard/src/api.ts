@@ -1,7 +1,7 @@
 import { IUser, IArticle, ICategory, IBanner, IProgram, IExtracurricular, IFacility, IAchievement, IGalleryActivity, IFAQ } from './types';
 
-const API_BASE = 'http://localhost:1337/api';
-export const UPLOAD_BASE = 'http://localhost:1337';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:1337/api';
+export const UPLOAD_BASE = import.meta.env.VITE_UPLOAD_BASE || 'http://localhost:1337';
 
 export const getToken = (): string | null => localStorage.getItem('nurtech_admin_token');
 export const setToken = (token: string) => localStorage.setItem('nurtech_admin_token', token);
