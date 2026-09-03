@@ -11,7 +11,8 @@
     "prisma:push": "prisma db push",
     "prisma:seed": "node src/seeders/seed.js",
     "prisma:studio": "prisma studio",
-    "db:setup": "node scripts/setup-db.js"
+    "db:setup": "node scripts/setup-db.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
